@@ -1,0 +1,4 @@
+PINBALL (proper score) vs climatological quantiles, n=84 gauges, all 48 leads pooled:
+q90: model 0.964 vs clim 1.767 cm -> skill +45.4%  (win 82/84)
+q99: model 0.177 vs clim 0.330 cm -> skill +46.2%  (win 77/84)
+per-gauge median skill: q90 +47.8%  q99 +49.5%

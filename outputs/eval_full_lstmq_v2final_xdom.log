@@ -1,0 +1,53 @@
+
+==================== eval_full [lstmq_v2final_xdom]  n=15 gauges ====================
+
+[A] Full-distribution per-lead (mean across gauges):
+  lead      mdlRMSE  skill%   NNSE  mdlMAE
+  L=4        11.28     30%  0.736    8.20
+  L=6        12.02     32%  0.713    8.62
+  L=8        12.35     34%  0.698    8.94
+  L=10       12.29     32%  0.694    8.94
+  L=12       11.87     25%  0.703    8.59
+  pooled      13.53     37%  0.653
+  >> Ebel @L=8h (m): RMSE 0.124  MAE 0.089  NNSE 0.698
+
+[B] Extreme — window-level (48h window contains surge>=thr):
+  thr      #win  mdlRMSE  perRMSE  skill
+  p99      4470    25.58    47.68    46%
+  p99.5    2521    28.03    53.43    48%
+  p99.9     697    34.61    65.90    47%
+    timestep-level (high-water hours, surge>=thr):
+  p99     24679    41.00    82.18    50%
+  p99.5   12333    48.07    95.89    50%
+  p99.9    2480    67.46   132.70    49%
+
+[B] Peak amplitude (true peak hour of p99.9 windows, n=697): true 116.1cm
+  model  : bias -48.69  under 97%  MAE 49.36  capture 0.58
+  persist: bias -93.26  MAE 93.73  capture 0.20
+
+[B] Lead-time skill on p99.9 windows:
+  L= 4h: mdl 27.13  pers 39.96  skill +32%
+  L= 6h: mdl 32.35  pers 51.95  skill +38%
+  L= 8h: mdl 31.79  pers 53.88  skill +41%
+  L=10h: mdl 33.40  pers 56.02  skill +40%
+  L=12h: mdl 33.97  pers 58.25  skill +42%
+
+[C] Peak-capture by peak-lead-position (n per bucket):
+  peak at  1-6 h: n=  92  model capture 0.72  persist 0.65
+  peak at  7-12h: n=  83  model capture 0.56  persist 0.26
+  peak at 13-24h: n= 194  model capture 0.58  persist 0.16
+  peak at 25-48h: n= 328  model capture 0.55  persist 0.07
+
+[D] Quantile section (v5). Pre-registered gates: tail-cov>=0.90, q99 peak capture>=0.6, sharpness ratio>=2, point non-inferior to v1.
+  coverage overall : q90 0.853 (nominal .90) | q99 0.967 (nominal .99)
+  TAIL coverage (hours y>=p99): q99 0.669   (tail collapse if << .90)
+  sharpness (q99-point): storm 30.19 cm | calm 22.57 cm | ratio 1.34  (constant envelope if ~1)
+  crossing rate (q90>q99): 0.0000
+  q99 peak-hour envelope capture (p99.9 windows, n=697): 0.88   (point 0.58, persist 0.20)
+    peak at  1-6 h: q99 capture 0.97  (point 0.72)
+    peak at  7-12h: q99 capture 0.86  (point 0.56)
+    peak at 13-24h: q99 capture 0.88  (point 0.58)
+    peak at 25-48h: q99 capture 0.86  (point 0.55)
+
+wrote outputs/eval_full_lstmq_v2final_xdom.csv
+done

@@ -1,0 +1,26 @@
+== ocrot ==  ENSO phase:
+  EN  : pooled +8.9%  @8h +9.4%  (gauges 111, windows 83865)
+  LN  : pooled +9.1%  @8h +10.1%  (gauges 111, windows 90850)
+  NEU : pooled +12.7%  @8h +9.6%  (gauges 111, windows 169250)
+  season:
+  DJF : pooled +5.0%  @8h +8.7%  (gauges 111, windows 84540)
+  JJA : pooled +17.1%  @8h +9.5%  (gauges 111, windows 87575)
+  MAM : pooled +11.6%  @8h +10.7%  (gauges 111, windows 86278)
+  SON : pooled +8.6%  @8h +9.4%  (gauges 111, windows 85572)
+  [enclosed] ENSO phase:
+  EN  : pooled -18.0%  @8h -25.3%  (gauges 6, windows 3886)
+  LN  : pooled -20.2%  @8h -22.8%  (gauges 6, windows 3896)
+  NEU : pooled -8.0%  @8h -23.3%  (gauges 6, windows 7687)
+  [open] ENSO phase:
+  EN  : pooled +10.6%  @8h +11.1%  (gauges 105, windows 79979)
+  LN  : pooled +10.9%  @8h +11.5%  (gauges 105, windows 86954)
+  NEU : pooled +14.1%  @8h +11.2%  (gauges 105, windows 161563)
+== deploy ==  ENSO phase:
+  EN  : pooled +40.9%  @8h +32.9%  (gauges 84, windows 57489)
+  LN  : pooled +38.7%  @8h +29.8%  (gauges 84, windows 62435)
+  NEU : pooled +39.0%  @8h +31.1%  (gauges 84, windows 117993)
+  season:
+  DJF : pooled +41.0%  @8h +31.3%  (gauges 84, windows 58499)
+  JJA : pooled +35.4%  @8h +29.8%  (gauges 84, windows 60409)
+  MAM : pooled +39.8%  @8h +32.1%  (gauges 84, windows 60350)
+  SON : pooled +39.2%  @8h +30.7%  (gauges 84, windows 58659)

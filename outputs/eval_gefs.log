@@ -1,0 +1,6 @@
+GEFS REAL-FORECAST FORCING SPOT CHECK (n=6 storms)
+window RMSE: era5-forcing 21.5 | gefs-forcing 38.2 | persistence 58.8 cm
+peak capture: era5 0.71 | gefs 0.34
+q99 envelope at peak: era5 1.15 | gefs 0.82
+median RMSE degradation era5->gefs: +70%
+storms where gefs-forcing still beats persistence: 5/6

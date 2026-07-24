@@ -1,0 +1,8 @@
+GTSM HEAD-TO-HEAD (n=80 gauges, 2010-2018 overlap, same 48h windows)
+full-dist @8h RMSE: ours 4.44 | GTSM 8.33 | pers 6.43 cm
+full-dist @24h    : ours 5.40 | GTSM 8.23 | pers 8.86
+full-dist @48h    : ours 6.35 | GTSM 8.23 | pers 11.25
+NNSE@8h mean: ours 0.801 | GTSM 0.521
+gauges where ours beats GTSM @8h RMSE: 79/80
+p99.9 storm windows @8h: ours 9.49 | GTSM 12.19 | pers 15.56 cm
+p99.9 storm windows @48h: ours 13.16 | GTSM 12.48 | pers 27.65
