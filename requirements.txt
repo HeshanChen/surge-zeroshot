@@ -1,0 +1,12 @@
+numpy
+pandas
+pyarrow
+torch
+scikit-learn
+utide
+netCDF4
+xarray
+cfgrib
+matplotlib
+cartopy
+scipy
