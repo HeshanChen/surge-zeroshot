@@ -1,0 +1,65 @@
+  ...20/111 stations
+  ...40/111 stations
+  ...60/111 stations
+  ...80/111 stations
+  ...100/111 stations
+
+==================== eval_full [lstmq_v2rotoc_cont]  n=111 gauges ====================
+[W] Window continuity: 343965 windows; 276594 fully continuous (80.4%); target span broken in 18472 (5.4%); 8-h lead not 8 real hours in 4153 (1.2%). Evaluated on continuous windows only.
+
+[A] Full-distribution per-lead (mean across gauges):
+  lead      mdlRMSE  skill%   NNSE  mdlMAE
+  L=4         4.44     17%  0.806    3.35
+  L=6         5.17     17%  0.764    3.89
+  L=8         5.76      9%  0.728    4.36
+  L=10        6.22      0%  0.700    4.73
+  L=12        6.62     -8%  0.675    5.04
+  pooled       8.17      5%  0.581
+  >> Ebel @L=8h (m): RMSE 0.058  MAE 0.044  NNSE 0.728
+
+[B] Extreme — window-level (48h window contains surge>=thr):
+  thr      #win  mdlRMSE  perRMSE  skill
+  p99     18470    14.39    16.04    10%
+  p99.5   10159    16.00    17.76    10%
+  p99.9    2397    20.53    22.48     9%
+    timestep-level (high-water hours, surge>=thr):
+  p99    119207    23.12    23.64     2%
+  p99.5   58335    26.46    27.28     3%
+  p99.9   11447    36.01    37.71     5%
+
+[B] Peak amplitude (true peak hour of p99.9 windows, n=2397): true 47.5cm
+  model  : bias -27.93  under 98%  MAE 28.10  capture 0.41
+  persist: bias -32.02  MAE 32.17  capture 0.33
+
+[B] Lead-time skill on p99.9 windows:
+  L= 4h: mdl 12.06  pers 13.76  skill +12%
+  L= 6h: mdl 14.47  pers 16.53  skill +12%
+  L= 8h: mdl 15.90  pers 17.41  skill  +9%
+  L=10h: mdl 16.70  pers 16.73  skill  +0%
+  L=12h: mdl 17.27  pers 16.38  skill  -5%
+
+[C] Peak-capture by peak-lead-position (n per bucket):
+  peak at  1-6 h: n= 341  model capture 0.66  persist 0.68
+  peak at  7-12h: n= 284  model capture 0.45  persist 0.46
+  peak at 13-24h: n= 539  model capture 0.40  persist 0.36
+  peak at 25-48h: n=1233  model capture 0.34  persist 0.19
+
+[D] Quantile section (v5). Pre-registered gates: tail-cov>=0.90, q99 peak capture>=0.6, sharpness ratio>=2, point non-inferior to v1.
+  coverage overall : q90 0.828 (nominal .90) | q99 0.944 (nominal .99)
+  TAIL coverage (hours y>=p99): q99 0.493   (tail collapse if << .90)
+  sharpness (q99-point): storm 14.91 cm | calm 12.21 cm | ratio 1.22  (constant envelope if ~1)
+  crossing rate (q90>q99): 0.0000
+  q99 peak-hour envelope capture (p99.9 windows, n=2397): 0.74   (point 0.41, persist 0.33)
+    peak at  1-6 h: q99 capture 0.92  (point 0.66)
+    peak at  7-12h: q99 capture 0.76  (point 0.45)
+    peak at 13-24h: q99 capture 0.72  (point 0.40)
+    peak at 25-48h: q99 capture 0.69  (point 0.34)
+  EVENT-LEVEL peak coverage: q99 at the true peak hour >= true peak in 24.9% of p99.9 windows (n=2397); q99 within 10% below the peak or above: 36.5%
+    peak at  1-6 h: covered 46.9%  (n=341)
+    peak at  7-12h: covered 21.1%  (n=284)
+    peak at 13-24h: covered 19.9%  (n=539)
+    peak at 25-48h: covered 21.8%  (n=1233)
+  hourly q90 / q99 coverage by lead: L1: 0.917/0.990 | L4: 0.892/0.985 | L8: 0.865/0.970 | L12: 0.850/0.958 | L24: 0.826/0.942 | L48: 0.797/0.925
+
+wrote outputs/eval_full_lstmq_v2rotoc_cont.csv
+done

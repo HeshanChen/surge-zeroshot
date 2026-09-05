@@ -9,13 +9,15 @@ apply()
 import pandas as pd
 import matplotlib.pyplot as plt
 ROOT = '/Users/heshan/Desktop/surge_fm'
+import sys as _sys
+SUF = _sys.argv[1] if len(_sys.argv) > 1 else ''   # '_cont' = continuous windows only (audit 2)
 
 RUNGS = [(64,'v2g64'),(128,'v2g128'),(256,'v2g256'),(384,'v2g384'),(512,'v2g512'),(640,'v2g640'),(760,'v2final')]
 N=[]; pooled=[]; at8=[]; hw=[]; cap=[]
 for n_, tag in RUNGS:
-    d = pd.read_csv(f'{ROOT}/outputs/eval_full_lstmq_{tag}.csv')
+    d = pd.read_csv(f'{ROOT}/outputs/eval_full_lstmq_{tag}{SUF}.csv')
     sk = lambda m,p: 100*(d[p].mean()-d[m].mean())/d[p].mean()
-    log = open(f'{ROOT}/outputs/eval_full_lstmq_{tag}.log').read()
+    log = open(f'{ROOT}/outputs/eval_full_lstmq_{tag}{SUF}.log').read()
     hwm = re.search(r'p99\.9\s+\d+\s+([\d.]+)\s+([\d.]+)', log.split('timestep-level')[1])
     N.append(n_); pooled.append(sk('rmse_p','prmse_p')); at8.append(sk('r8','p8'))
     hw.append(100*(float(hwm.group(2))-float(hwm.group(1)))/float(hwm.group(2)))
@@ -31,5 +33,5 @@ for ax, (title, y) in zip(axes, panels):
     ax.set_xlabel('training gauges')
 for ax, letter in zip(axes, 'abcd'): panel_label(ax, letter, dx=-0.075, dy=1.13)
 fig.tight_layout(w_pad=2.0, h_pad=1.6)
-save_pub(fig, f'{ROOT}/outputs/scaling_figure')
-print('wrote outputs/scaling_figure.{pdf,png} from logs')
+save_pub(fig, f'{ROOT}/outputs/scaling_figure{SUF}')
+print(f'wrote outputs/scaling_figure{SUF}.{{pdf,png}} from logs')

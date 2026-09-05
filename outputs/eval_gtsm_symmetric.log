@@ -1,0 +1,168 @@
+SYMMETRIC GTSM HEAD-TO-HEAD (n=80 gauges, 2010-2018 overlap, identical 48h windows, seismic-masked; all windows)
+
+== 0. Reproduction of eval_gtsm.py (flagship vs raw mean-aligned GTSM vs persistence) ==
+  @8h  ours 4.44 | GTSM_al 8.33 | pers 6.43   [eval_gtsm.log: 4.44 | 8.33 | 6.43]
+  @48h ours 6.35 | GTSM_al 8.24 | pers 11.26   [6.35 | 8.23 | 11.25]
+  DIAGNOSTIC: persistence alone beats GTSM_al @8h at 60/80 gauges (p=8.6e-06); @24h 44/80; @48h 19/80
+
+== 1. Target-definition symmetry: GTSM high-passed like the target (720-h centered mean removed) ==
+  rmse8: GTSM_al 8.33 -> GTSM_hp 6.49 cm
+  rmse24: GTSM_al 8.24 -> GTSM_hp 6.40 cm
+  rmse48: GTSM_al 8.24 -> GTSM_hp 6.39 cm
+  NNSE@8h: GTSM_al 0.521 -> GTSM_hp 0.632
+
+== 2. TIER A, no local observation on either side: gauge-free model vs GTSM_hp ==
+--- gauge-free (EOT20 statics, sigma_hat) vs GTSM_hp  (n=80) ---
+  full-dist @ 8h RMSE: gf 7.13 | gtsm_hp 6.49 cm   (median 6.02 | 5.74)
+  full-dist @24h RMSE: gf 7.01 | gtsm_hp 6.40 cm   (median 6.08 | 5.67)
+  full-dist @48h RMSE: gf 7.06 | gtsm_hp 6.39 cm   (median 6.08 | 5.74)
+  NNSE@8h mean: gf 0.613 | gtsm_hp 0.632
+  gauges where gf beats gtsm_hp @8h: 38/80  (sign p=7.4e-01, Wilcoxon p=3.4e-01)
+  gauges where gf beats gtsm_hp @48h: 38/80  (sign p=7.4e-01)
+  p99.9 storm windows @8h : gf 13.76 | gtsm_hp 10.50 cm   (n=74 gauges)
+  p99.9 storm windows @48h: gf 13.86 | gtsm_hp 10.74 cm
+  peak capture at true peak hour (storm windows, pooled): gf 0.57 | gtsm_hp 0.64
+--- gauge-free vs GTSM_al (raw alignment, as in the paper)  (n=80) ---
+  full-dist @ 8h RMSE: gf 7.13 | gtsm_al 8.33 cm   (median 6.02 | 7.73)
+  full-dist @24h RMSE: gf 7.01 | gtsm_al 8.24 cm   (median 6.08 | 7.66)
+  full-dist @48h RMSE: gf 7.06 | gtsm_al 8.24 cm   (median 6.08 | 7.73)
+  NNSE@8h mean: gf 0.613 | gtsm_al 0.521
+  gauges where gf beats gtsm_al @8h: 60/80  (sign p=8.6e-06, Wilcoxon p=2.1e-05)
+  gauges where gf beats gtsm_al @48h: 61/80  (sign p=2.7e-06)
+  p99.9 storm windows @8h : gf 13.76 | gtsm_al 12.23 cm   (n=74 gauges)
+  p99.9 storm windows @48h: gf 13.86 | gtsm_al 12.34 cm
+  peak capture at true peak hour (storm windows, pooled): gf 0.57 | gtsm_al 0.69
+
+== 3. TIER B, observation at t0 on both sides: flagship vs GTSM + persistence-of-error ==
+--- flagship vs GTSM anchored, tau=inf (y0 + GTSM increment)  (n=80) ---
+  full-dist @ 8h RMSE: ours 4.44 | anch_inf 7.74 cm   (median 3.44 | 6.27)
+  full-dist @24h RMSE: ours 5.41 | anch_inf 5.33 cm   (median 4.19 | 4.63)
+  full-dist @48h RMSE: ours 6.35 | anch_inf 6.78 cm   (median 5.22 | 5.76)
+  NNSE@8h mean: ours 0.801 | anch_inf 0.571
+  gauges where ours beats anch_inf @8h: 65/80  (sign p=1.4e-08, Wilcoxon p=5.5e-11)
+  gauges where ours beats anch_inf @48h: 53/80  (sign p=4.9e-03)
+  p99.9 storm windows @8h : ours 9.41 | anch_inf 10.98 cm   (n=74 gauges)
+  p99.9 storm windows @48h: ours 13.18 | anch_inf 12.60 cm
+  peak capture at true peak hour (storm windows, pooled): ours 0.64 | anch_inf 0.71
+--- flagship vs GTSM anchored, tau=24h  (n=80) ---
+  full-dist @ 8h RMSE: ours 4.44 | anch_24 7.04 cm   (median 3.44 | 5.81)
+  full-dist @24h RMSE: ours 5.41 | anch_24 6.19 cm   (median 4.19 | 5.62)
+  full-dist @48h RMSE: ours 6.35 | anch_24 7.58 cm   (median 5.22 | 6.99)
+  NNSE@8h mean: ours 0.801 | anch_24 0.606
+  gauges where ours beats anch_24 @8h: 67/80  (sign p=6.4e-10, Wilcoxon p=2.8e-10)
+  gauges where ours beats anch_24 @48h: 59/80  (sign p=2.5e-05)
+  p99.9 storm windows @8h : ours 9.41 | anch_24 10.14 cm   (n=74 gauges)
+  p99.9 storm windows @48h: ours 13.18 | anch_24 11.77 cm
+  peak capture at true peak hour (storm windows, pooled): ours 0.64 | anch_24 0.71
+--- flagship vs GTSM anchored, tau=12h  (n=80) ---
+  full-dist @ 8h RMSE: ours 4.44 | anch_12 7.00 cm   (median 3.44 | 6.04)
+  full-dist @24h RMSE: ours 5.41 | anch_12 7.41 cm   (median 4.19 | 6.80)
+  full-dist @48h RMSE: ours 6.35 | anch_12 8.15 cm   (median 5.22 | 7.63)
+  NNSE@8h mean: ours 0.801 | anch_12 0.604
+  gauges where ours beats anch_12 @8h: 70/80  (sign p=3.2e-12, Wilcoxon p=1.6e-11)
+  gauges where ours beats anch_12 @48h: 63/80  (sign p=2.3e-07)
+  p99.9 storm windows @8h : ours 9.41 | anch_12 10.18 cm   (n=74 gauges)
+  p99.9 storm windows @48h: ours 13.18 | anch_12 12.25 cm
+  peak capture at true peak hour (storm windows, pooled): ours 0.64 | anch_12 0.71
+--- flagship vs GTSM + 25-h mean-error bias correction (raw GTSM)  (n=80) ---
+  full-dist @ 8h RMSE: ours 4.44 | anch_lp 5.71 cm   (median 3.44 | 5.03)
+  full-dist @24h RMSE: ours 5.41 | anch_lp 6.16 cm   (median 4.19 | 5.48)
+  full-dist @48h RMSE: ours 6.35 | anch_lp 6.82 cm   (median 5.22 | 6.23)
+  NNSE@8h mean: ours 0.801 | anch_lp 0.684
+  gauges where ours beats anch_lp @8h: 66/80  (sign p=3.1e-09, Wilcoxon p=4.3e-06)
+  gauges where ours beats anch_lp @48h: 53/80  (sign p=4.9e-03)
+  p99.9 storm windows @8h : ours 9.41 | anch_lp 8.72 cm   (n=74 gauges)
+  p99.9 storm windows @48h: ours 13.18 | anch_lp 10.89 cm
+  peak capture at true peak hour (storm windows, pooled): ours 0.64 | anch_lp 0.68
+--- flagship vs GTSM_hp + 25-h mean-error bias correction  [strongest physics+obs baseline]  (n=80) ---
+  full-dist @ 8h RMSE: ours 4.44 | anch_hp_lp 5.69 cm   (median 3.44 | 5.02)
+  full-dist @24h RMSE: ours 5.41 | anch_hp_lp 6.12 cm   (median 4.19 | 5.39)
+  full-dist @48h RMSE: ours 6.35 | anch_hp_lp 6.73 cm   (median 5.22 | 6.10)
+  NNSE@8h mean: ours 0.801 | anch_hp_lp 0.685
+  gauges where ours beats anch_hp_lp @8h: 66/80  (sign p=3.1e-09, Wilcoxon p=5.1e-06)
+  gauges where ours beats anch_hp_lp @48h: 53/80  (sign p=4.9e-03)
+  p99.9 storm windows @8h : ours 9.41 | anch_hp_lp 8.72 cm   (n=74 gauges)
+  p99.9 storm windows @48h: ours 13.18 | anch_hp_lp 10.79 cm
+  peak capture at true peak hour (storm windows, pooled): ours 0.64 | anch_hp_lp 0.68
+--- flagship vs GTSM_hp + 208-h mean-error correction  [same history length as the learned model]  (n=80) ---
+  full-dist @ 8h RMSE: ours 4.44 | anch_hp_lp208 6.63 cm   (median 3.44 | 5.86)
+  full-dist @24h RMSE: ours 5.41 | anch_hp_lp208 6.73 cm   (median 4.19 | 6.15)
+  full-dist @48h RMSE: ours 6.35 | anch_hp_lp208 6.95 cm   (median 5.22 | 6.51)
+  NNSE@8h mean: ours 0.801 | anch_hp_lp208 0.623
+  gauges where ours beats anch_hp_lp208 @8h: 67/80  (sign p=6.4e-10, Wilcoxon p=1.2e-10)
+  gauges where ours beats anch_hp_lp208 @48h: 56/80  (sign p=4.5e-04)
+  p99.9 storm windows @8h : ours 9.41 | anch_hp_lp208 10.51 cm   (n=74 gauges)
+  p99.9 storm windows @48h: ours 13.18 | anch_hp_lp208 11.38 cm
+  peak capture at true peak hour (storm windows, pooled): ours 0.64 | anch_hp_lp208 0.64
+--- GTSM anchored (tau=inf) vs persistence  [does physics add to the observation?]  (n=80) ---
+  full-dist @ 8h RMSE: anch_inf 7.74 | pers 6.43 cm   (median 6.27 | 4.94)
+  full-dist @24h RMSE: anch_inf 5.33 | pers 8.87 cm   (median 4.63 | 7.55)
+  full-dist @48h RMSE: anch_inf 6.78 | pers 11.26 cm   (median 5.76 | 9.56)
+  NNSE@8h mean: anch_inf 0.571 | pers 0.671
+  gauges where anch_inf beats pers @8h: 22/80  (sign p=7.0e-05, Wilcoxon p=4.1e-04)
+  gauges where anch_inf beats pers @48h: 75/80  (sign p=4.3e-17)
+  p99.9 storm windows @8h : anch_inf 10.98 | pers 15.40 cm   (n=74 gauges)
+  p99.9 storm windows @48h: anch_inf 12.60 | pers 27.73 cm
+  peak capture at true peak hour (storm windows, pooled): anch_inf 0.71 | pers 0.32
+--- GTSM_hp + 25-h bias correction vs persistence  (n=80) ---
+  full-dist @ 8h RMSE: anch_hp_lp 5.69 | pers 6.43 cm   (median 5.02 | 4.94)
+  full-dist @24h RMSE: anch_hp_lp 6.12 | pers 8.87 cm   (median 5.39 | 7.55)
+  full-dist @48h RMSE: anch_hp_lp 6.73 | pers 11.26 cm   (median 6.10 | 9.56)
+  NNSE@8h mean: anch_hp_lp 0.685 | pers 0.671
+  gauges where anch_hp_lp beats pers @8h: 44/80  (sign p=4.3e-01, Wilcoxon p=7.1e-02)
+  gauges where anch_hp_lp beats pers @48h: 66/80  (sign p=3.1e-09)
+  p99.9 storm windows @8h : anch_hp_lp 8.72 | pers 15.40 cm   (n=74 gauges)
+  p99.9 storm windows @48h: anch_hp_lp 10.79 | pers 27.73 cm
+  peak capture at true peak hour (storm windows, pooled): anch_hp_lp 0.68 | pers 0.32
+
+== 4. Sensitivity: drop gauges whose nearest GTSM point is > 25 km away (3 dropped: cherry_point-9449424-usa-noaa, tacoma-9446484-usa-noaa, varennes-15660-can-meds) ==
+--- gauge-free vs GTSM_hp  (n=77) ---
+  full-dist @ 8h RMSE: gf 6.98 | gtsm_hp 6.30 cm   (median 5.90 | 5.63)
+  full-dist @24h RMSE: gf 6.86 | gtsm_hp 6.21 cm   (median 5.95 | 5.58)
+  full-dist @48h RMSE: gf 6.90 | gtsm_hp 6.20 cm   (median 5.92 | 5.65)
+  NNSE@8h mean: gf 0.614 | gtsm_hp 0.633
+  gauges where gf beats gtsm_hp @8h: 37/77  (sign p=8.2e-01, Wilcoxon p=3.4e-01)
+  gauges where gf beats gtsm_hp @48h: 37/77  (sign p=8.2e-01)
+  p99.9 storm windows @8h : gf 13.79 | gtsm_hp 10.52 cm   (n=72 gauges)
+  p99.9 storm windows @48h: gf 13.74 | gtsm_hp 10.73 cm
+  peak capture at true peak hour (storm windows, pooled): gf 0.57 | gtsm_hp 0.64
+--- flagship vs GTSM anchored tau=inf  (n=77) ---
+  full-dist @ 8h RMSE: ours 4.44 | anch_inf 7.64 cm   (median 3.32 | 6.17)
+  full-dist @24h RMSE: ours 5.37 | anch_inf 5.19 cm   (median 4.17 | 4.54)
+  full-dist @48h RMSE: ours 6.28 | anch_inf 6.61 cm   (median 5.14 | 5.72)
+  NNSE@8h mean: ours 0.798 | anch_inf 0.570
+  gauges where ours beats anch_inf @8h: 62/77  (sign p=6.1e-08, Wilcoxon p=2.3e-10)
+  gauges where ours beats anch_inf @48h: 50/77  (sign p=1.2e-02)
+  p99.9 storm windows @8h : ours 9.42 | anch_inf 10.98 cm   (n=72 gauges)
+  p99.9 storm windows @48h: ours 13.27 | anch_inf 12.67 cm
+  peak capture at true peak hour (storm windows, pooled): ours 0.64 | anch_inf 0.71
+--- flagship vs GTSM_hp + 25-h bias correction  (n=77) ---
+  full-dist @ 8h RMSE: ours 4.44 | anch_hp_lp 5.58 cm   (median 3.32 | 4.94)
+  full-dist @24h RMSE: ours 5.37 | anch_hp_lp 5.97 cm   (median 4.17 | 5.35)
+  full-dist @48h RMSE: ours 6.28 | anch_hp_lp 6.55 cm   (median 5.14 | 6.07)
+  NNSE@8h mean: ours 0.798 | anch_hp_lp 0.684
+  gauges where ours beats anch_hp_lp @8h: 63/77  (sign p=1.4e-08, Wilcoxon p=1.4e-05)
+  gauges where ours beats anch_hp_lp @48h: 50/77  (sign p=1.2e-02)
+  p99.9 storm windows @8h : ours 9.42 | anch_hp_lp 8.71 cm   (n=72 gauges)
+  p99.9 storm windows @48h: ours 13.27 | anch_hp_lp 10.82 cm
+  peak capture at true peak hour (storm windows, pooled): ours 0.64 | anch_hp_lp 0.68
+
+== 5. Lead-resolved mean RMSE (cm), all gauges ==
+  lead      ours       gf     pers  gtsm_al  gtsm_hp anch_inf  anch_24  anch_12  anch_lp anch_hp_lp anch_hp_lp208
+     1h     2.28     7.24     2.53     8.25     6.40     4.08     4.02     3.99     5.17     5.16     6.45
+     2h     3.09     7.17     3.69     8.27     6.42     5.36     5.20     5.14     5.29     5.28     6.51
+     4h     3.80     7.18     5.01     8.33     6.46     7.30     6.88     6.71     5.51     5.50     6.59
+     6h     4.21     7.18     5.87     8.29     6.43     8.23     7.55     7.32     5.59     5.58     6.56
+     8h     4.44     7.13     6.43     8.33     6.49     7.74     7.04     7.00     5.71     5.69     6.63
+    12h     4.77     7.07     6.90     8.27     6.40     5.14     5.24     6.16     5.71     5.69     6.60
+    18h     5.27     6.99     8.66     8.18     6.35     8.66     7.43     7.63     6.04     6.01     6.64
+    24h     5.41     7.01     8.87     8.24     6.40     5.33     6.19     7.41     6.16     6.12     6.73
+    36h     6.05     7.03    10.47     8.22     6.36     6.61     7.15     7.96     6.53     6.46     6.83
+    48h     6.35     7.06    11.26     8.24     6.39     6.78     7.58     8.15     6.82     6.73     6.95
+  storm windows (p99.9), mean over gauges with >=5 windows:
+     4h     8.60    14.27    11.03    12.23    10.30    10.32     9.79     9.62     8.26     8.28    10.31
+     8h     9.41    13.76    15.40    12.23    10.50    10.98    10.14    10.18     8.72     8.72    10.51
+    12h     9.86    13.15    17.44    12.39    10.48     9.60     9.24    10.08     8.79     8.78    10.56
+    24h    10.76    13.05    22.95    12.03    10.56    10.11     9.94    11.12     9.73     9.70    10.89
+    36h    12.32    13.74    27.17    12.23    10.88    12.33    11.32    11.99    10.74    10.67    11.57
+    48h    13.18    13.86    27.73    12.34    10.74    12.60    11.77    12.25    10.89    10.79    11.38

@@ -5,6 +5,7 @@
   ...100/111 stations
 
 ==================== eval_full [lstmq_v2rotocr2]  n=111 gauges ====================
+[W] Window continuity: 343965 windows; 276594 fully continuous (80.4%); target span broken in 18472 (5.4%); 8-h lead not 8 real hours in 4153 (1.2%). Evaluated on all windows.
 
 [A] Full-distribution per-lead (mean across gauges):
   lead      mdlRMSE  skill%   NNSE  mdlMAE
@@ -53,6 +54,12 @@
     peak at  7-12h: q99 capture 0.75  (point 0.44)
     peak at 13-24h: q99 capture 0.76  (point 0.44)
     peak at 25-48h: q99 capture 0.70  (point 0.37)
+  EVENT-LEVEL peak coverage: q99 at the true peak hour >= true peak in 26.1% of p99.9 windows (n=3326); q99 within 10% below the peak or above: 38.8%
+    peak at  1-6 h: covered 53.5%  (n=518)
+    peak at  7-12h: covered 23.5%  (n=396)
+    peak at 13-24h: covered 20.4%  (n=749)
+    peak at 25-48h: covered 20.7%  (n=1663)
+  hourly q90 / q99 coverage by lead: L1: 0.927/0.993 | L4: 0.894/0.987 | L8: 0.849/0.970 | L12: 0.833/0.958 | L24: 0.834/0.949 | L48: 0.810/0.938
 
 wrote outputs/eval_full_lstmq_v2rotocr2.csv
 done

@@ -7,6 +7,7 @@ import torch, pandas as pd, numpy as np, argparse
 _ap=argparse.ArgumentParser(); _ap.add_argument('--ckpt', default='outputs/baseline_lstmq_v2final_best.pt'); _ap.add_argument('--tag', default='v2final')
 _ap.add_argument('--sigma_file', default='', help='CSV stn,sigma_hat: use predicted scale instead of the record std (fully gauge-free)')
 _ap.add_argument('--statics_file', default='', help='CSV stn,range_eot,ff_eot: override test-gauge tidal statics with open-tide-model values')
+_ap.add_argument('--continuous_only', action='store_true', help='keep only windows whose 256 rows are consecutive hours (audit 2026-09-05)')
 _args=_ap.parse_args()
 sys.path.insert(0, '/Users/heshan/Desktop/surge_fm/src')
 sys.path.insert(0, '/Users/heshan/Desktop/surge_fm/scripts')
@@ -39,12 +40,15 @@ if _args.sigma_file:
 m = GlobalLSTM(n_out=3); m.load_state_dict(torch.load(f'{ROOT}/{_args.ckpt}', map_location='cpu')); m.eval()
 rows = []
 for i, name in enumerate(te):
-    try: a = load_station(name)
+    try: a, tt = load_station(name, return_time=True)
     except Exception: continue
     if a is None or len(a) < 3000: continue
     a = a.copy(); tstd = float(a[:, 0].std())+1e-6
     a[:, 1:] = (a[:, 1:]-a[:, 1:].mean(0))/(a[:, 1:].std(0)+1e-6)
-    ws = np.stack([a[st:st+W] for st in range(0, len(a)-W, H)])
+    starts = np.arange(0, len(a)-W, H)
+    if _args.continuous_only: starts = starts[(tt[starts+W-1]-tt[starts]) == (W-1)]
+    if len(starts) < 20: continue
+    ws = np.stack([a[st:st+W] for st in starts])
     ctx = np.concatenate([np.zeros_like(ws[:, :Tctx, :1]), ws[:, :Tctx, 1:]], 2).transpose(0, 2, 1)  # surge ch = 0
     ff = ws[:, Tctx:, 1:].transpose(0, 2, 1)
     tru = ws[:, Tctx:, 0]*100
@@ -78,7 +82,7 @@ for i, name in enumerate(te):
                 cross=float((q90 > q99).mean())))
     if (i+1) % 20 == 0: print(f'  {i+1}/{len(te)}', flush=True)
 d = pd.DataFrame(rows)
-d.to_csv(f'{ROOT}/outputs/eval_forcing_only_{_args.tag}.csv', index=False)
+d.to_csv(f'{ROOT}/outputs/eval_forcing_only_{_args.tag}{"_cont" if _args.continuous_only else ""}.csv', index=False)
 print(f'\nFORCING-ONLY (n={len(d)}): NNSE@8h {d.nnse8.mean():.3f} | RMSE@8h {d.rmse8.mean():.2f} cm')
 print(f'quantiles: cov99 {d.cov99.mean():.3f} cov90 {d.cov90.mean():.3f} | tail99 {d.tail99.mean():.3f} | crossing {d.cross.mean():.4f}')
 print(f'storm p99.9: peak capture {d.pk_cap.mean():.2f} | q99 envelope at peak {d.q99_cap.mean():.2f} | window RMSE {d.sw_rmse.mean():.1f} cm')

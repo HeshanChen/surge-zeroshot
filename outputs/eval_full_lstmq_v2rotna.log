@@ -10,6 +10,7 @@
   ...220/220 stations
 
 ==================== eval_full [lstmq_v2rotna]  n=214 gauges ====================
+[W] Window continuity: 658662 windows; 461436 fully continuous (70.1%); target span broken in 68197 (10.4%); 8-h lead not 8 real hours in 17159 (2.6%). Evaluated on all windows.
 
 [A] Full-distribution per-lead (mean across gauges):
   lead      mdlRMSE  skill%   NNSE  mdlMAE
@@ -58,6 +59,12 @@
     peak at  7-12h: q99 capture 0.83  (point 0.50)
     peak at 13-24h: q99 capture 0.75  (point 0.41)
     peak at 25-48h: q99 capture 0.75  (point 0.38)
+  EVENT-LEVEL peak coverage: q99 at the true peak hour >= true peak in 29.6% of p99.9 windows (n=7204); q99 within 10% below the peak or above: 38.1%
+    peak at  1-6 h: covered 53.2%  (n=1101)
+    peak at  7-12h: covered 32.5%  (n=838)
+    peak at 13-24h: covered 24.0%  (n=1639)
+    peak at 25-48h: covered 24.4%  (n=3626)
+  hourly q90 / q99 coverage by lead: L1: 0.894/0.983 | L4: 0.880/0.981 | L8: 0.865/0.974 | L12: 0.849/0.968 | L24: 0.835/0.962 | L48: 0.835/0.962
 
 wrote outputs/eval_full_lstmq_v2rotna.csv
 done

@@ -1,7 +1,8 @@
 """Real-forecast forcing spot check (reviewer fire-point #2): replace ERA5 perfect-prognosis forcing
 with GEFSv12 reforecast (control member) for 12 named storms at test gauges; identical model, identical
 windows; compare ERA5-forcing vs GEFS-forcing vs persistence. GEFS 3-hourly -> hourly interpolation,
-anchored at ERA5 analysis at issue time. Conventions: our wu=spd*sin(dir)=-u10, wv=-v10; msl Pa->hPa;
+anchored at ERA5 analysis at issue time (raw units; the 2026-07-03 run de-normalized these already-raw
+anchors a second time, see outputs/eval_gefs_v1_anchorbug.*; fixed 2026-09-04). Conventions: our wu=spd*sin(dir)=-u10, wv=-v10; msl Pa->hPa;
 apcp 3h-accum -> hourly/3. -> outputs/eval_gefs.csv + .log"""
 import sys, glob, warnings; warnings.filterwarnings('ignore')
 import torch, pandas as pd, numpy as np, xarray as xr
@@ -13,7 +14,13 @@ Tctx, W, H = 208, 256, 48
 sa = pd.read_csv(f'{ROOT}/catalog/static_attributes.csv').set_index('name')
 sp = pd.read_csv(f'{ROOT}/catalog/exp_split_final.csv')
 tr = [n for n in sp[sp.fold == 'train'].name if n in sa.index]
+import argparse
+_ap = argparse.ArgumentParser()
+_ap.add_argument('--inits', default='', help='optional CSV stn,init (YYYYMMDD00) overriding the default issue time (peak-36h floored to 00Z) per storm; audit 2026-09-05')
+_ap.add_argument('--tag', default='', help='output suffix: outputs/eval_gefs{tag}.csv/.log')
+_args = _ap.parse_args()
 ev = pd.read_csv(f'{ROOT}/outputs/gfs_events.csv', parse_dates=['peak_time'])
+INITS = dict(pd.read_csv(f'{ROOT}/{_args.inits}', dtype=str).values) if _args.inits else {}
 def sfeat(n):
     r = sa.loc[n]; la, lo = np.radians(float(r.lat)), np.radians(float(r.lon))
     return np.array([np.cos(la)*np.cos(lo), np.cos(la)*np.sin(lo), np.sin(la), float(r.tidal_range_m), float(r.form_factor)], dtype='float32')
@@ -50,7 +57,9 @@ def gefs_point(stn_short, tag, la, lo):
 rows = []
 for _, r in ev.iterrows():
     name = r.stn; short = name.split('-')[0]
-    init = (r.peak_time - pd.Timedelta(hours=36)).floor('D'); tag = init.strftime('%Y%m%d00')
+    init = (r.peak_time - pd.Timedelta(hours=36)).floor('D')
+    if short in INITS: init = pd.Timestamp(pd.to_datetime(INITS[short], format='%Y%m%d%H')).tz_localize('UTC')
+    tag = init.strftime('%Y%m%d00'); peak_lead_true = (r.peak_time - init).total_seconds()/3600
     df = load_with_time(name)
     t0 = init
     if t0 not in df.index:
@@ -81,11 +90,11 @@ for _, r in ev.iterrows():
         def interp(vals, anchor0):
             s3 = pd.Series([anchor0]+[vals[h] for h in hh3], index=[t0]+t3)
             return s3.reindex(s3.index.union(hourly)).interpolate('time').reindex(hourly).values
-        wu = interp({h: -g['ugrd_hgt'][h] for h in hh3}, a[Tctx-1, 1]*fsd[0]+fmu[0])
-        wv = interp({h: -g['vgrd_hgt'][h] for h in hh3}, a[Tctx-1, 2]*fsd[1]+fmu[1])
-        ms = interp({h: g['pres_msl'][h]/100.0 for h in hh3}, a[Tctx-1, 3]*fsd[2]+fmu[2])
+        wu = interp({h: -g['ugrd_hgt'][h] for h in hh3}, a[Tctx-1, 1])
+        wv = interp({h: -g['vgrd_hgt'][h] for h in hh3}, a[Tctx-1, 2])
+        ms = interp({h: g['pres_msl'][h]/100.0 for h in hh3}, a[Tctx-1, 3])
         tp3 = {h: max(g['apcp_sfc'][h], 0)/3.0 for h in hh3}
-        tp = interp(tp3, a[Tctx-1, 4]*fsd[3]+fmu[3])
+        tp = interp(tp3, a[Tctx-1, 4])
         Fg = np.stack([wu, wv, ms, tp], 1)
         ffg = ((Fg-fmu)/fsd).T[None].astype('float32')
     except Exception as e:
@@ -97,7 +106,7 @@ for _, r in ev.iterrows():
     qe = oe[0,:,2].numpy()*tstd*100; qg = og[0,:,2].numpy()*tstd*100
     per = a[Tctx-1, 0]*100
     ip = int(tru.argmax())
-    rows.append(dict(stn=short, init=tag, peak_cm=float(tru.max()), peak_lead=ip+1,
+    rows.append(dict(stn=short, init=tag, peak_cm=float(tru.max()), peak_lead=ip+1, catalog_peak_cm=float(r.peak_cm), catalog_peak_lead_h=float(peak_lead_true), peak_in_window=bool(peak_lead_true <= 48),
         rmse_era5=float(np.sqrt(((pe-tru)**2).mean())), rmse_gefs=float(np.sqrt(((pg-tru)**2).mean())),
         rmse_per=float(np.sqrt(((per-tru)**2).mean())),
         cap_era5=float(pe[ip]/tru[ip]), cap_gefs=float(pg[ip]/tru[ip]),
@@ -106,11 +115,12 @@ for _, r in ev.iterrows():
 
 d = pd.DataFrame(rows)
 if not len(d): print('NO EVENTS EVALUATED'); raise SystemExit
-d.to_csv(f'{ROOT}/outputs/eval_gefs.csv', index=False)
+d.to_csv(f'{ROOT}/outputs/eval_gefs{_args.tag}.csv', index=False)
 out = [f'GEFS REAL-FORECAST FORCING SPOT CHECK (n={len(d)} storms)',
        f'window RMSE: era5-forcing {d.rmse_era5.mean():.1f} | gefs-forcing {d.rmse_gefs.mean():.1f} | persistence {d.rmse_per.mean():.1f} cm',
        f'peak capture: era5 {d.cap_era5.mean():.2f} | gefs {d.cap_gefs.mean():.2f}',
        f'q99 envelope at peak: era5 {d.q99cap_era5.mean():.2f} | gefs {d.q99cap_gefs.mean():.2f}',
        f'median RMSE degradation era5->gefs: {((d.rmse_gefs-d.rmse_era5)/d.rmse_era5).median()*100:+.0f}%',
        f'storms where gefs-forcing still beats persistence: {int((d.rmse_gefs<d.rmse_per).sum())}/{len(d)}']
-txt = '\n'.join(out); open(f'{ROOT}/outputs/eval_gefs.log','w').write(txt+'\n'); print(txt)
+out.append(f'storms whose catalogued peak lies inside the 48-h window: {int(d.peak_in_window.sum())}/{len(d)}')
+txt = '\n'.join(out); open(f'{ROOT}/outputs/eval_gefs{_args.tag}.log','w').write(txt+'\n'); print(txt)

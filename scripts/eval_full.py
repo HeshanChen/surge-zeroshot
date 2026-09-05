@@ -24,9 +24,11 @@ ap.add_argument('--residual', action='store_true')
 ap.add_argument('--nstations', type=int, default=0, help='>0 = subsample (SMOKE TEST ONLY, not for conclusions)')
 ap.add_argument('--tag', default='model')
 ap.add_argument('--split', default='exp_split.csv', help='split file in catalog/')
-ap.add_argument('--model', default='v1', choices=['v1', 'v5', 'lstm', 'lstmq', 'v7'], help='v5/lstmq = multi-quantile (adds [D]); lstm = GlobalLSTM point baseline')
+ap.add_argument('--model', default='v1', choices=['v1', 'v5', 'lstm', 'lstmq', 'v7', 'v7e'], help='v5/lstmq = multi-quantile (adds [D]); lstm = GlobalLSTM point baseline; v7e = v7 with hour+channel forcing embeddings')
+ap.add_argument('--continuous_only', action='store_true', help='keep only 256-h windows whose rows are consecutive hours (no dropped gap inside context or target); audit 2026-09-05')
 args = ap.parse_args()
-RESIDUAL = args.residual; V5 = args.model in ('v5', 'lstmq', 'v7')
+if args.continuous_only and not args.tag.endswith('_cont'): args.tag += '_cont'
+RESIDUAL = args.residual; V5 = args.model in ('v5', 'lstmq', 'v7', 'v7e')
 dev = args.device if (args.device != 'mps' or torch.backends.mps.is_available()) else 'cpu'
 print(f'device {dev} | ckpt {args.ckpt.split("/")[-1]} | residual {RESIDUAL} | tag {args.tag}', flush=True)
 
@@ -53,13 +55,21 @@ def sfeat(n):
     return np.array([np.cos(la)*np.cos(lo), np.cos(la)*np.sin(lo), np.sin(la), float(r.tidal_range_m), float(r.form_factor)], dtype='float32')
 SF = {n: sfeat(n) for n in tr+te}; arr = np.stack([SF[n] for n in tr]); smu = arr.mean(0); ssd = arr.std(0)+1e-6
 for n in SF: SF[n] = (SF[n]-smu)/ssd
+WIN = collections.Counter()      # window continuity bookkeeping (all evals report it; --continuous_only filters on it)
 def prep(name):
-    a = load_station(name)
+    a, t = load_station(name, return_time=True)
     if a is None: return None
     a = a.copy(); tstd = float(a[:, 0].std())+1e-6
     thr = {p: float(np.percentile(a[:, 0], p)) for p in PCTS}
     a[:, 1:] = (a[:, 1:]-a[:, 1:].mean(0))/(a[:, 1:].std(0)+1e-6)
-    ws = np.stack([a[st:st+W] for st in range(0, len(a)-W, Ttgt)])
+    starts = np.arange(0, len(a)-W, Ttgt)
+    cont = (t[starts+W-1]-t[starts]) == (W-1)                      # 256 consecutive hours, context and target
+    WIN['all'] += len(starts); WIN['cont'] += int(cont.sum())
+    WIN['tgt_broken'] += int(((t[starts+W-1]-t[starts+Tctx-1]) != Ttgt).sum())
+    WIN['lead8_broken'] += int(((t[starts+Tctx+7]-t[starts+Tctx-1]) != 8).sum())
+    if args.continuous_only: starts = starts[cont]
+    if len(starts) < 20: return None
+    ws = np.stack([a[st:st+W] for st in starts])
     mu = ws[:, :Tctx, 0].mean(1, keepdims=True); sd = ws[:, :Tctx, 0].std(1, keepdims=True)+1e-6
     ctx = np.concatenate([((ws[:, :Tctx, 0]-mu)/sd)[:, :, None], ws[:, :Tctx, 1:]], 2).transpose(0, 2, 1)
     s = torch.tensor(SF[name]).unsqueeze(0).expand(len(ws), -1)
@@ -75,6 +85,9 @@ elif args.model == 'lstmq':
 elif args.model == 'v7':
     from models.surge_jepa_v7 import SurgeJEPA_v7
     model = SurgeJEPA_v7(**CFG).to(dev)
+elif args.model == 'v7e':
+    from models.surge_jepa_v7e import SurgeJEPA_v7e
+    model = SurgeJEPA_v7e(**CFG).to(dev)
 elif args.model == 'lstm':
     from models.baseline_lstm import GlobalLSTM
     model = GlobalLSTM().to(dev)
@@ -87,6 +100,7 @@ Wacc = {p: collections.Counter() for p in PCTS}; Tacc = {p: collections.Counter(
 Lacc = {L: collections.Counter() for L in LEADS}
 peak = {'lead': [], 'true': [], 'pred': [], 'pers': [], 'q99': [], 'under': 0, 'n': 0}
 Q = collections.Counter()          # v5 quantile stats: coverage / tail coverage / crossing / sharpness
+QL = {'c90': np.zeros(H), 'c99': np.zeros(H), 'n': 0}   # hourly coverage by lead (audit 2026-09-05)
 def rmse(c, k): return (c[k]/c['n'])**0.5 if c['n'] else float('nan')
 
 for idx, n in enumerate(te):
@@ -112,9 +126,17 @@ for idx, n in enumerate(te):
     sstot_h = ((tru-tru.mean(0, keepdims=True))**2).sum(0); nse_h = 1-(e**2).sum(0)/(sstot_h+1e-9); nnse_h = 1/(2-nse_h)
     rmse_p = float(np.sqrt((e**2).mean())); prmse_p = float(np.sqrt((ep**2).mean()))
     sstot = ((tru-tru.mean())**2).sum(); nnse_p = 1/(2-(1-(e**2).sum()/(sstot+1e-9)))
-    rows.append(dict(stn=n, rmse_p=rmse_p, prmse_p=prmse_p, nnse_p=nnse_p,
-                     **{f'r{h}': rmse_h[h-1] for h in LEADS}, **{f'p{h}': prmse_h[h-1] for h in LEADS},
-                     **{f'm{h}': mae_h[h-1] for h in LEADS}, **{f'n{h}': nnse_h[h-1] for h in LEADS}))
+    row = dict(stn=n, nwin=len(tru), rmse_p=rmse_p, prmse_p=prmse_p, nnse_p=nnse_p,
+               **{f'r{h}': rmse_h[h-1] for h in LEADS}, **{f'p{h}': prmse_h[h-1] for h in LEADS},
+               **{f'm{h}': mae_h[h-1] for h in LEADS}, **{f'n{h}': nnse_h[h-1] for h in LEADS})
+    wm_s = tru.max(1) >= thr[PEAKP]*100                              # per-station storm-window and peak-coverage columns (for block bootstrap)
+    row['n_storm'] = int(wm_s.sum())
+    if wm_s.sum() >= 1:
+        row['s8_m'] = float(np.sqrt((e[wm_s][:, 7]**2).mean())); row['s8_p'] = float(np.sqrt((ep[wm_s][:, 7]**2).mean()))
+        if V5:
+            it_s = tru[wm_s].argmax(1); ar_s = np.arange(len(it_s))
+            row['pkcov'] = float((qarr[wm_s][ar_s, it_s, 1] >= tru[wm_s][ar_s, it_s]).mean())
+    rows.append(row)
     # B. extreme
     for p in PCTS:
         t = thr[p]*100; wm = tru.max(1) >= t; c = Wacc[p]; c['ntot'] += len(tru); c['nwin'] += int(wm.sum())
@@ -131,6 +153,7 @@ for idx, n in enumerate(te):
         mt = tru >= t99
         if mt.any(): Q['tn'] += int(mt.sum()); Q['tc'] += int((tru[mt] <= q99[mt]).sum())
         Q['xc'] += int((q90 > q99).sum())
+        QL['c90'] += (tru <= q90).sum(0); QL['c99'] += (tru <= q99).sum(0); QL['n'] += len(tru)
         storm = tru.max(1) >= thr[PEAKP]*100; calm = tru.max(1) < t99
         if storm.any(): Q['ss'] += float((q99[storm]-pred[storm]).sum()); Q['sn'] += int(q99[storm].size)
         if calm.any(): Q['cs'] += float((q99[calm]-pred[calm]).sum()); Q['cn'] += int(q99[calm].size)
@@ -147,6 +170,9 @@ for idx, n in enumerate(te):
 
 df = pd.DataFrame(rows); m = df.mean(numeric_only=True)
 print(f'\n==================== eval_full [{args.tag}]  n={len(df)} gauges ====================')
+print(f'[W] Window continuity: {WIN["all"]} windows; {WIN["cont"]} fully continuous ({100*WIN["cont"]/max(WIN["all"],1):.1f}%); '
+      f'target span broken in {WIN["tgt_broken"]} ({100*WIN["tgt_broken"]/max(WIN["all"],1):.1f}%); 8-h lead not 8 real hours in {WIN["lead8_broken"]} ({100*WIN["lead8_broken"]/max(WIN["all"],1):.1f}%). '
+      f'Evaluated on {"continuous windows only" if args.continuous_only else "all windows"}.')
 print('\n[A] Full-distribution per-lead (mean across gauges):')
 print(f'  {"lead":<8}{"mdlRMSE":>9}{"skill%":>8}{"NNSE":>7}{"mdlMAE":>8}')
 for L in LEADS:
@@ -189,6 +215,13 @@ if V5:
     for lo, hi in PEAK_LEAD_BUCKETS:
         mk = (ld_ >= lo) & (ld_ <= hi)
         if mk.sum(): print(f'    peak at {lo:>2}-{hi:<2}h: q99 capture {q9_[mk].mean()/tr_[mk].mean():.2f}  (point {pd_[mk].mean()/tr_[mk].mean():.2f})')
+    cov_pk = (q9_ >= tr_)
+    print(f'  EVENT-LEVEL peak coverage: q99 at the true peak hour >= true peak in {100*cov_pk.mean():.1f}% of p{PEAKP} windows (n={len(q9_)}); '
+          f'q99 within 10% below the peak or above: {100*((q9_ >= 0.9*tr_)).mean():.1f}%')
+    for lo, hi in PEAK_LEAD_BUCKETS:
+        mk = (ld_ >= lo) & (ld_ <= hi)
+        if mk.sum(): print(f'    peak at {lo:>2}-{hi:<2}h: covered {100*cov_pk[mk].mean():.1f}%  (n={int(mk.sum())})')
+    print('  hourly q90 / q99 coverage by lead: ' + ' | '.join(f'L{L}: {QL["c90"][L-1]/max(QL["n"],1):.3f}/{QL["c99"][L-1]/max(QL["n"],1):.3f}' for L in (1, 4, 8, 12, 24, 48)))
 
 df.to_csv(f'{ROOT}/outputs/eval_full_{args.tag}.csv', index=False)
 print(f'\nwrote outputs/eval_full_{args.tag}.csv\ndone', flush=True)

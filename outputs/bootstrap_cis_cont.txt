@@ -1,0 +1,94 @@
+SPATIAL-BLOCK BOOTSTRAP CIs (B=4000; evals_cont)
+
+--- Deployment, 84 marine test gauges (n=84 gauges) ---
+  pooled skill vs persistence (%)                37.28  95% CI [  33.49,   40.83]   (11 region blocks)
+  pooled skill vs persistence (%)                37.28  95% CI [  33.99,   39.51]   (28 country blocks)
+  8-h skill vs persistence (%)                   30.30  95% CI [  26.22,   34.26]   (11 region blocks)
+  8-h skill vs persistence (%)                   30.30  95% CI [  26.92,   33.36]   (28 country blocks)
+  gauges beating persistence, pooled (%)         96.43  95% CI [  91.95,  100.00]   (11 region blocks)
+  gauges beating persistence, pooled (%)         96.43  95% CI [  90.57,  100.00]   (28 country blocks)
+
+--- Deployment, storm windows at 8 h (n=79 gauges) ---
+  storm 8-h skill vs persistence (%)             35.77  95% CI [  26.64,   43.89]   (11 region blocks)
+  storm 8-h skill vs persistence (%)             35.77  95% CI [  28.91,   43.71]   (28 country blocks)
+
+--- Deployment, q99 covers the true storm peak (n=79 gauges) ---
+  fraction of p99.9 peaks under q99 (%)          41.26  95% CI [  30.69,   51.18]   (11 region blocks)
+  fraction of p99.9 peaks under q99 (%)          41.26  95% CI [  29.89,   48.92]   (28 country blocks)
+
+--- Rotation Japan+Pacific (n=77 gauges) ---
+  pooled skill (%)                               29.78  95% CI [  17.55,   48.88]   (3 region blocks)
+  pooled skill (%)                               29.78  95% CI [  16.36,   32.82]   (9 country blocks)
+  8-h skill (%)                                  23.14  95% CI [  21.40,   33.10]   (3 region blocks)
+  8-h skill (%)                                  23.14  95% CI [  21.35,   28.73]   (9 country blocks)
+
+--- Rotation Europe (n=231 gauges) ---
+  pooled skill (%)                               10.73  95% CI [   0.41,   21.57]   (4 region blocks)
+  pooled skill (%)                               10.73  95% CI [   1.62,   19.20]   (17 country blocks)
+  8-h skill (%)                                  11.49  95% CI [   3.25,   19.24]   (4 region blocks)
+  8-h skill (%)                                  11.49  95% CI [   5.54,   17.62]   (17 country blocks)
+
+--- Rotation North America (n=214 gauges) ---
+  pooled skill (%)                                9.59  95% CI [   1.12,   28.35]   (4 region blocks)
+  pooled skill (%)                                9.59  95% CI [   7.25,   16.50]   (5 country blocks)
+  8-h skill (%)                                   9.45  95% CI [   3.63,   26.93]   (4 region blocks)
+  8-h skill (%)                                   9.45  95% CI [   8.15,   20.52]   (5 country blocks)
+
+--- Rotation Oceania (median run) (n=111 gauges) ---
+  pooled skill (%)                                7.91  95% CI [   7.65,   25.08]   (3 region blocks)
+  pooled skill (%)                                7.91  95% CI [   5.20,   30.65]   (8 country blocks)
+  8-h skill (%)                                   9.14  95% CI [   8.61,   38.20]   (3 region blocks)
+  8-h skill (%)                                   9.14  95% CI [   6.85,   35.85]   (8 country blocks)
+
+--- Europe intervention, 593-gauge minus 299-gauge corpus (n=231 gauges) ---
+  8-h skill 593 (%)                              11.49  95% CI [   3.25,   19.24]   (4 region blocks)
+  8-h skill 593 (%)                              11.49  95% CI [   5.60,   17.44]   (17 country blocks)
+  8-h skill 299 (%)                               6.97  95% CI [  -1.84,   15.26]   (4 region blocks)
+  8-h skill 299 (%)                               6.97  95% CI [   1.20,   12.64]   (17 country blocks)
+  8-h RMSE difference 593-299 (cm)               -0.45  95% CI [  -0.51,   -0.16]   (4 region blocks)
+  8-h RMSE difference 593-299 (cm)               -0.45  95% CI [  -0.65,   -0.27]   (17 country blocks)
+  gauges where 593 has lower 8-h RMSE (%)        80.52  95% CI [  75.30,   96.43]   (4 region blocks)
+  gauges where 593 has lower 8-h RMSE (%)        80.52  95% CI [  70.61,   89.95]   (17 country blocks)
+
+--- Composition ablation, 49-country minus 2-country 298 (n=84 gauges) ---
+  8-h skill 49-country (%)                       23.85  95% CI [  19.26,   28.65]   (11 region blocks)
+  8-h skill 49-country (%)                       23.85  95% CI [  19.00,   27.44]   (28 country blocks)
+  8-h skill 2-country (%)                        -1.71  95% CI [ -21.32,   16.21]   (11 region blocks)
+  8-h skill 2-country (%)                        -1.71  95% CI [ -23.37,   14.60]   (28 country blocks)
+  8-h RMSE difference (cm)                       -1.64  95% CI [  -2.87,   -0.55]   (11 region blocks)
+  8-h RMSE difference (cm)                       -1.64  95% CI [  -2.86,   -0.74]   (28 country blocks)
+  gauges where 49-country lower (%)              79.76  95% CI [  66.23,   92.59]   (11 region blocks)
+  gauges where 49-country lower (%)              79.76  95% CI [  67.95,   93.40]   (28 country blocks)
+
+--- Tier A: gauge-free minus GTSM (high-passed) (n=80 gauges) ---
+  8-h RMSE difference gf-GTSM (cm)                0.53  95% CI [  -0.49,    1.91]   (11 region blocks)
+  8-h RMSE difference gf-GTSM (cm)                0.53  95% CI [  -0.22,    1.55]   (27 country blocks)
+  48-h RMSE difference (cm)                       0.60  95% CI [  -0.38,    2.01]   (11 region blocks)
+  48-h RMSE difference (cm)                       0.60  95% CI [  -0.14,    1.65]   (27 country blocks)
+  gauges where gauge-free lower at 8 h (%)       47.50  95% CI [  25.92,   65.66]   (11 region blocks)
+  gauges where gauge-free lower at 8 h (%)       47.50  95% CI [  29.00,   63.53]   (27 country blocks)
+
+--- Tier A storm windows: gauge-free minus GTSM (n=61 gauges) ---
+  8-h storm RMSE difference (cm)                  3.04  95% CI [   0.21,    7.70]   (11 region blocks)
+  8-h storm RMSE difference (cm)                  3.04  95% CI [   0.73,    6.48]   (24 country blocks)
+  48-h storm RMSE difference (cm)                 3.47  95% CI [   0.08,    9.62]   (11 region blocks)
+  48-h storm RMSE difference (cm)                 3.47  95% CI [   0.57,    7.82]   (24 country blocks)
+  peak capture difference gf-GTSM                -0.04  95% CI [  -0.15,    0.05]   (11 region blocks)
+  peak capture difference gf-GTSM                -0.04  95% CI [  -0.14,    0.02]   (24 country blocks)
+
+--- Tier B: forecast minus GTSM + 25-h bias correction (n=80 gauges) ---
+  8-h RMSE difference (cm)                       -1.30  95% CI [  -2.06,   -0.19]   (11 region blocks)
+  8-h RMSE difference (cm)                       -1.30  95% CI [  -1.88,   -0.52]   (27 country blocks)
+  gauges where forecast lower at 8 h (%)         82.50  95% CI [  60.29,   98.46]   (11 region blocks)
+  gauges where forecast lower at 8 h (%)         82.50  95% CI [  67.00,   94.51]   (27 country blocks)
+  48-h RMSE difference (cm)                      -0.39  95% CI [  -1.21,    0.75]   (11 region blocks)
+  48-h RMSE difference (cm)                      -0.39  95% CI [  -0.99,    0.40]   (27 country blocks)
+
+--- Tier B storm windows: forecast minus GTSM + 25-h bias correction (n=61 gauges) ---
+  8-h storm RMSE difference (cm)                  0.18  95% CI [  -1.30,    2.49]   (11 region blocks)
+  8-h storm RMSE difference (cm)                  0.18  95% CI [  -1.07,    1.77]   (24 country blocks)
+  48-h storm RMSE difference (cm)                 1.54  95% CI [  -0.89,    5.63]   (11 region blocks)
+  48-h storm RMSE difference (cm)                 1.54  95% CI [  -0.61,    5.05]   (24 country blocks)
+  peak capture difference                        -0.03  95% CI [  -0.09,    0.01]   (11 region blocks)
+  peak capture difference                        -0.03  95% CI [  -0.09,    0.01]   (24 country blocks)
+

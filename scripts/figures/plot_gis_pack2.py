@@ -11,6 +11,8 @@ import pandas as pd, numpy as np
 ROOT = '/Users/heshan/Desktop/surge_fm'
 plt.rcParams.update({'font.family': 'Helvetica', 'font.size': 7.5, 'axes.linewidth': 0.5})
 OCEAN, LAND, COAST = '#eef4f9', '#f0efe9', '#b9b7b0'
+import sys as _sys
+SUF = _sys.argv[1] if len(_sys.argv) > 1 else ''   # '_cont' = continuous windows only (audit 2), applies to the Oceania panel
 sa = pd.read_csv(f'{ROOT}/catalog/static_attributes.csv').set_index('name')
 
 def base(ax, scale='110m'):
@@ -41,7 +43,7 @@ fig.savefig(f'{ROOT}/outputs/gis_density.pdf'); fig.savefig(f'{ROOT}/outputs/gis
 plt.close(fig); print('C density done')
 
 # ---------- D: Port Phillip zoom (two panels) ----------
-oc = pd.read_csv(f'{ROOT}/outputs/eval_full_lstmq_v2rotocr2.csv')
+oc = pd.read_csv(f'{ROOT}/outputs/eval_full_lstmq_v2rotocr2{SUF}.csv')
 oc['sk'] = 100*(1 - oc.rmse_p/oc.prmse_p)
 oc['lat'] = [sa.loc[n, 'lat'] for n in oc.stn]; oc['lon'] = [sa.loc[n, 'lon'] for n in oc.stn]
 sub = oc[(oc.lon > 143.5) & (oc.lon < 148.4) & (oc.lat > -39.2) & (oc.lat < -37.3)].copy()
@@ -76,7 +78,7 @@ cax = fig.add_axes([0.848, 0.13, 0.012, 0.30])
 cb = fig.colorbar(sc, cax=cax); cb.set_label('pooled skill (%)', fontsize=6.2)
 cb.ax.tick_params(labelsize=5.8, length=2); cb.outline.set_linewidth(0.4)
 fig.suptitle('enclosed lagoons: the reproducible regime limit (Oceania rotation, median run)', fontsize=7.8, y=0.985)
-fig.savefig(f'{ROOT}/outputs/gis_ppbay.pdf'); fig.savefig(f'{ROOT}/outputs/gis_ppbay.png', dpi=170)
+fig.savefig(f'{ROOT}/outputs/gis_ppbay{SUF}.pdf'); fig.savefig(f'{ROOT}/outputs/gis_ppbay{SUF}.png', dpi=170)
 plt.close(fig); print('D ppbay done')
 
 # ---------- E: GTSM delta ----------

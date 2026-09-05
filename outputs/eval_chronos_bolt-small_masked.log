@@ -1,0 +1,22 @@
+chronos-bolt-small loaded | 77 stations
+  ...10/77
+  ...20/77
+  ...30/77
+  ...40/77
+  ...50/77
+  ...60/77
+  ...70/77
+
+==================== Chronos-bolt-small zero-shot (history-only, NO forcing)  n=77 ====================
+  L= 4h : RMSE  2.67 | pers  2.89 | skill  +7%
+  L= 6h : RMSE  3.29 | pers  3.60 | skill  +8%
+  L= 8h : RMSE  3.76 | pers  3.97 | skill  +5%
+  L=10h : RMSE  4.20 | pers  4.31 | skill  +3%
+  L=12h : RMSE  4.59 | pers  4.58 | skill  -0%
+  pooled: RMSE  6.47 | pers  6.53 | skill  +1%
+  extreme timestep p99: RMSE 17.97 | pers 18.38 | skill +2%
+  extreme timestep p99.5: RMSE 20.48 | pers 20.95 | skill +2%
+  extreme timestep p99.9: RMSE 27.45 | pers 28.29 | skill +3%
+  peak capture (p99.9, n=2178): model 0.31 | pers 0.27
+wrote outputs/eval_chronos_bolt-small.csv
+done

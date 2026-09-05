@@ -10,6 +10,7 @@ from models.baseline_lstm import GlobalLSTM
 from data.dataset_v0 import seismic_mask
 ROOT = '/Users/heshan/Desktop/surge_fm'
 Tctx, W, H = 208, 256, 48
+CONT = '--continuous_only' in sys.argv; SUF = '_cont' if CONT else ''
 
 sa = pd.read_csv(f'{ROOT}/catalog/static_attributes.csv').set_index('name')
 sp = pd.read_csv(f'{ROOT}/catalog/exp_split_final.csv')
@@ -44,7 +45,10 @@ for k, name in enumerate(te):
     if len(df) < 3000: continue
     a = df.values.astype('float32'); tstd = float(a[:, 0].std())+1e-6
     af = a.copy(); af[:, 1:] = (af[:, 1:]-af[:, 1:].mean(0))/(af[:, 1:].std(0)+1e-6)
-    starts = list(range(0, len(af)-W, H))
+    starts = np.arange(0, len(af)-W, H)
+    if CONT:   # audit 2: keep only windows whose 256 rows are consecutive hours
+        th = (df.index.values.astype('datetime64[h]').astype('int64')); starts = starts[(th[starts+W-1]-th[starts]) == (W-1)]
+    if len(starts) < 20: continue
     ws = np.stack([af[st:st+W] for st in starts]); raw = np.stack([a[st:st+W, 0] for st in starts])
     mu = ws[:, :Tctx, 0].mean(1, keepdims=True); sd = ws[:, :Tctx, 0].std(1, keepdims=True)+1e-6
     ctx = np.concatenate([((ws[:, :Tctx, 0]-mu)/sd)[:, :, None], ws[:, :Tctx, 1:]], 2).transpose(0, 2, 1)
@@ -66,10 +70,10 @@ for k, name in enumerate(te):
 
 d = pd.DataFrame(rows)
 d['sk90'] = 100*(1-d.pb90/d.pb90_clim); d['sk99'] = 100*(1-d.pb99/d.pb99_clim)
-d.to_csv(f'{ROOT}/outputs/eval_pinball.csv', index=False)
+d.to_csv(f'{ROOT}/outputs/eval_pinball{SUF}.csv', index=False)
 out = [f'PINBALL (proper score) vs climatological quantiles, n={len(d)} gauges, all 48 leads pooled:',
        f'q90: model {d.pb90.mean():.3f} vs clim {d.pb90_clim.mean():.3f} cm -> skill {100*(1-d.pb90.mean()/d.pb90_clim.mean()):+.1f}%  (win {int((d.pb90<d.pb90_clim).sum())}/{len(d)})',
        f'q99: model {d.pb99.mean():.3f} vs clim {d.pb99_clim.mean():.3f} cm -> skill {100*(1-d.pb99.mean()/d.pb99_clim.mean()):+.1f}%  (win {int((d.pb99<d.pb99_clim).sum())}/{len(d)})',
        f'per-gauge median skill: q90 {d.sk90.median():+.1f}%  q99 {d.sk99.median():+.1f}%']
-txt='\n'.join(out); open(f'{ROOT}/outputs/eval_pinball.log','w').write(txt+'\n'); print(txt)
+txt='\n'.join(out); open(f'{ROOT}/outputs/eval_pinball{SUF}.log','w').write(txt+'\n'); print(txt)
 print('PINBALL EVAL DONE', flush=True)

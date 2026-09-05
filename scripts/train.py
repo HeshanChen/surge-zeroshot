@@ -15,7 +15,14 @@ ap = argparse.ArgumentParser()
 ap.add_argument('--split', default='exp_split.csv', help='split file in catalog/ (exp_split.csv=Japan holdout, exp_split_eu.csv, exp_split_na.csv)')
 ap.add_argument('--tag', default='', help='suffix for output ckpts, e.g. _eu')
 ap.add_argument('--forcing_only', action='store_true', help='zero the surge context channel and the persistence anchor (true ungauged mode)')
+ap.add_argument('--epochs', type=int, default=12, help='training budget in epochs (ladder default 12)')
+ap.add_argument('--target_steps', type=int, default=0, help='if >0, choose the epoch count so that total optimizer steps match this (matched-update control)')
 args = ap.parse_args()
+class _Tee:
+    def __init__(self, path): self.f = open(path, 'w'); self.stdout = sys.stdout
+    def write(self, x): self.f.write(x); self.stdout.write(x)
+    def flush(self): self.f.flush(); self.stdout.flush()
+sys.stdout = _Tee(f'/Users/heshan/Desktop/surge_fm/outputs/train_lstmq{args.tag}.log')   # persist the training log (audit 2026-09-04)
 dev = 'mps' if torch.backends.mps.is_available() else 'cpu'; print(f'device {dev} | split {args.split} | tag {args.tag!r}', flush=True)
 Tctx, Ttgt, W = 208, 48, 256
 TAUS = (0.90, 0.99); LAM_Q = 1.0
@@ -95,7 +102,10 @@ def zeroshot():   # zero-shot on VAL fold (selection only); verdict = eval_full 
                 qcap.append(float(q99[wm][ar, it].sum()/(tw[ar, it].sum()+1e-6)))
     model.train()
     return np.mean(zsp), np.mean(pep), np.mean(zs8), np.mean(pe8), float(np.mean(pcap)) if pcap else 0., float(np.mean(qcap)) if qcap else 0., float(np.mean(cov))
-EP=12; bs=64; spe=N//bs; tot=EP*spe; warm=int(0.1*tot); step=0; t0=time.time(); best=999
+bs=64; spe=N//bs
+EP = max(1, math.ceil(args.target_steps/spe)) if args.target_steps else args.epochs
+tot=EP*spe; warm=int(0.1*tot); step=0; t0=time.time(); best=999
+print(f'budget: {EP} epochs x {spe} steps/epoch = {tot} optimizer steps' + (f' (matched to target {args.target_steps})' if args.target_steps else ''), flush=True)
 z = zeroshot(); print(f'epoch 0 (fresh=persistence): pooled {z[0]:.2f}/{z[1]:.2f} | @8h {z[2]:.2f}/{z[3]:.2f} | ptcap {z[4]:.2f} q99cap {z[5]:.2f} cov99 {z[6]:.3f}', flush=True)
 for ep in range(EP):
     perm = torch.randperm(N)

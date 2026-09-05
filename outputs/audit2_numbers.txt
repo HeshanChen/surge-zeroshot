@@ -1,0 +1,54 @@
+
+===== all windows =====
+rotation union: n=635 pooled +13.7 @8h +11.7 beating persistence 510/635
+   Japan: n=77 negative 0
+   Europe: n=233 negative 51
+   N America: n=214 negative 36
+   Oceania r2: n=111 negative 38
+continent table (n, pooled, @8h, NNSE@8h, wins):
+   Asia              18   +43   +33 0.799 18/18
+   Europe            18   +42   +30 0.807 18/18
+   N. America        15   +39   +30 0.786 14/15
+   Oceania           10   +38   +26 0.856 10/10
+   Pacific islands    7   +23   +31 0.698 7/7
+   S. America         8   +37   +37 0.722 8/8
+   Africa             8   +31   +35 0.762 7/8
+   All               84   +39   +31 0.786 82/84
+   members: Pacific islands: kanton, lautoka, numbo_noumea, papeete, penrhyn, pohnpei, rikitea; Africa: arrecife, dakar, durban, fuerteventura, funchal, lamu, lapalma, port_elizabeth; S. America: base_prat, juan_fernandez, madeira, paita, puerto_montt, san_juan, stanley, ushuaia; N. America: anchorage, atlantic_city, bar_harbor, cherry_point, humboldt_bay_ca, lameshur_bay, morgans_point, port_aux_basques, port_chicago, port_manatee, richmond, tacoma, tofino_bc, varennes, veracruz_ver; Oceania: bermagui, bowen, busselton_port_geographe, fremantle, hobart, jervis_bay, melbourne_williamstown, melville_bay_gove_harbour, port_douglas, west_channel_pile
+   negative gauges: dakar-223e-sen-uhslc, varennes-15660-can-meds
+scaling pooled: values [21.4, 26.3, 30.4, 33.9, 36.9, 38.4, 39.5]  log-linear slope 5.12/doubling; rung-to-rung per-doubling rates ['4.9', '4.1', '6.1', '7.2', '4.5', '4.4']
+scaling 8h: values [17.5, 20.8, 23.3, 27.3, 28.9, 30.6, 31.2]  log-linear slope 3.97/doubling; rung-to-rung per-doubling rates ['3.3', '2.5', '6.9', '3.8', '5.2', '2.5']
+gauge-free EOT20 statics + predicted sigma (all open)       NNSE@8h 0.606  above climatology 68/84  (cols ['stn', 'rmse8', 'nnse8', 'pk_cap', 'q99_cap', 'sw_rmse', 'cov99', 'cov90'])
+gauge-free local statics + predicted sigma                  NNSE@8h 0.611  above climatology 69/84  (cols ['stn', 'rmse8', 'nnse8', 'cov99', 'cov90', 'tail99', 'cross'])
+gauge-free local statics + measured sigma                   NNSE@8h 0.631  above climatology 71/84  (cols ['stn', 'rmse8', 'nnse8'])
+gauge-free flagship with water level zeroed at inference    NNSE@8h 0.528  above climatology 61/84  (cols ['stn', 'rmse8', 'nnse8'])
+factor: LSTM lower 8-h RMSE than v7e at 75/77; LSTM pooled +20 @8h +18; v7e pooled +7 @8h +2
+Europe 593 vs 299: n=233 first lower 8-h RMSE at 194/233; pooled +13 vs +3; @8h +12 vs +7
+composition 49-country vs 2-country: n=84 first lower 8-h RMSE at 67/84; pooled +31 vs +12; @8h +25 vs +0
+
+===== _cont =====
+rotation union: n=633 pooled +11.2 @8h +11.2 beating persistence 477/633
+   Japan: n=77 negative 0
+   Europe: n=231 negative 61
+   N America: n=214 negative 48
+   Oceania r2: n=111 negative 47
+continent table (n, pooled, @8h, NNSE@8h, wins):
+   Asia              18   +39   +30 0.790 18/18
+   Europe            18   +40   +29 0.803 18/18
+   N. America        15   +37   +29 0.776 13/15
+   Oceania           10   +35   +26 0.855 10/10
+   Pacific islands    7   +23   +32 0.697 7/7
+   S. America         8   +37   +37 0.725 8/8
+   Africa             8   +31   +35 0.762 7/8
+   All               84   +37   +30 0.782 81/84
+   members: Pacific islands: kanton, lautoka, numbo_noumea, papeete, penrhyn, pohnpei, rikitea; Africa: arrecife, dakar, durban, fuerteventura, funchal, lamu, lapalma, port_elizabeth; S. America: base_prat, juan_fernandez, madeira, paita, puerto_montt, san_juan, stanley, ushuaia; N. America: anchorage, atlantic_city, bar_harbor, cherry_point, humboldt_bay_ca, lameshur_bay, morgans_point, port_aux_basques, port_chicago, port_manatee, richmond, tacoma, tofino_bc, varennes, veracruz_ver; Oceania: bermagui, bowen, busselton_port_geographe, fremantle, hobart, jervis_bay, melbourne_williamstown, melville_bay_gove_harbour, port_douglas, west_channel_pile
+   negative gauges: dakar-223e-sen-uhslc, varennes-15660-can-meds, veracruz_ver-250a-mex-uhslc
+scaling pooled: values [19.1, 23.7, 27.9, 31.5, 34.7, 36.4, 37.3]  log-linear slope 5.21/doubling; rung-to-rung per-doubling rates ['4.5', '4.2', '6.1', '7.9', '5.2', '3.5']
+scaling 8h: values [17.3, 20.0, 22.7, 26.7, 28.3, 29.7, 30.3]  log-linear slope 3.83/doubling; rung-to-rung per-doubling rates ['2.7', '2.7', '6.8', '4.0', '4.2', '2.4']
+gauge-free EOT20 statics + predicted sigma (all open)       NNSE@8h 0.593  above climatology 67/84  (cols ['stn', 'rmse8', 'nnse8', 'pk_cap', 'q99_cap', 'sw_rmse', 'cov99', 'cov90'])
+gauge-free local statics + predicted sigma                  NNSE@8h 0.598  above climatology 68/84  (cols ['stn', 'rmse8', 'nnse8', 'pk_cap', 'q99_cap', 'sw_rmse', 'cov99', 'cov90'])
+gauge-free local statics + measured sigma                   NNSE@8h 0.618  above climatology 70/84  (cols ['stn', 'rmse8', 'nnse8', 'pk_cap', 'q99_cap', 'sw_rmse', 'cov99', 'cov90'])
+gauge-free flagship with water level zeroed at inference: no file for v2final_cont
+factor: LSTM lower 8-h RMSE than v7e at 71/77; LSTM pooled +15 @8h +14; v7e pooled +7 @8h -0
+Europe 593 vs 299: n=231 first lower 8-h RMSE at 186/231; pooled +11 vs -0; @8h +11 vs +7
+composition 49-country vs 2-country: n=84 first lower 8-h RMSE at 67/84; pooled +29 vs +7; @8h +24 vs -2

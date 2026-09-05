@@ -26,7 +26,9 @@ def seismic_mask(lat, lon, index):
     for t,h in zip(q.time[sel],hrs[sel]):
         m.loc[t-pd.Timedelta(hours=1):t+pd.Timedelta(hours=int(h))]=True
     return m
-def load_station(name):
+def load_station(name, return_time=False):
+    """return_time=True also returns the hourly timestamps (int64 hours since epoch) of the kept rows, so callers
+    can detect windows that span a dropped gap (rows are concatenated positionally after dropna and masking)."""
     s=pd.read_parquet(f'{ROOT}/data/processed/{name}.parquet')['surge']; s=s.where(s.abs()<4)
     e=pd.read_parquet(f'{ROOT}/data/raw/era5/{name}.parquet')
     if e.index.tz is None: e.index=e.index.tz_localize('UTC')
@@ -40,7 +42,10 @@ def load_station(name):
         if _SA is None: _SA=pd.read_csv(f'{ROOT}/catalog/static_attributes.csv').set_index('name')
         if name in _SA.index:
             df=df[~seismic_mask(float(_SA.loc[name,'lat']), float(_SA.loc[name,'lon']), df.index)]
-    return df[['surge','wu','wv','mslp','precip']].values.astype('float32') if len(df)>=3000 else None
+    if len(df)<3000: return (None, None) if return_time else None
+    a=df[['surge','wu','wv','mslp','precip']].values.astype('float32')
+    if return_time: return a, df.index.values.astype('datetime64[h]').astype('int64')
+    return a
 def available_stations():
     names=pd.read_csv(f'{ROOT}/catalog/clean_stations.csv')['name']
     era5=set(os.path.basename(f)[:-8] for f in glob.glob(f'{ROOT}/data/raw/era5/*.parquet'))

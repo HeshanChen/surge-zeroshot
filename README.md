@@ -1,16 +1,43 @@
-# Zero-shot probabilistic storm-surge forecasting: global observational benchmark
+# Learning transferable storm-surge forecasts from a global tide-gauge network
 
-Code, frozen splits, model checkpoints, and evaluation artifacts for the paper
-*"Zero-shot probabilistic storm-surge forecasting from gauged to ungauged coasts"* (Chen, 2026).
+Code, frozen splits, model checkpoints, and evaluation artifacts for the manuscript
+*"Learning transferable storm-surge forecasts from a global tide-gauge network"* (Chen and co-author, 2026;
+earlier preprint title *"Zero-shot probabilistic storm-surge forecasting from gauged to ungauged coasts"*).
 
-Every headline number in the paper is asserted directly from the committed evaluation
-artifacts by the audit gate:
+Every headline number in the manuscript is asserted directly from the committed evaluation
+artifacts by two audit gates:
 
 ```bash
-python scripts/verify_numbers.py        # 69 checks; exit 0 = every number reproduces
+python scripts/verify_numbers_cont.py   # September 2026 revision: continuous-window numbers (primary)
+python scripts/verify_numbers.py        # July 2026 preprint: all-window numbers (69 checks)
 ```
 
 See **NUMBERS.md** for the claim-by-claim provenance table (paper number → artifact → producing script).
+
+## September 2026 revision
+
+The manuscript now reports every result on evaluation windows whose 256 rows are consecutive hours
+(`--continuous_only` in `scripts/eval_full.py`, `eval_gtsm_symmetric.py`, `eval_forcing_only.py`,
+`eval_pinball.py`, `baseline_chronos.py`); all-window results remain as the sensitivity set
+(`compare_cont.py`). New experiments and artifacts since the preprint, all under the same clean protocol
+(validation-fold checkpoint selection, seismic-masked records, 12 epochs):
+
+- symmetric hydrodynamic head-to-head (`scripts/experiments/eval_gtsm_symmetric.py`: GTSM high-passed like the
+  target, 25-h mean-error bias correction, two information tiers) and its map (`plot_gis_gtsm_sym.py`);
+- spatial-block bootstrap intervals (`scripts/bootstrap_cis.py`) replacing per-gauge p-values;
+- Europe corpus intervention (299 vs 593 Europe-free gauges, `catalog/exp_split_eu299v.csv`), fixed-count
+  composition ablation (`exp_split_c298strat.csv`, `exp_split_c298usjp.csv`), matched-update control
+  (64 and 256 gauges at the 760-gauge step budget);
+- clean architecture factor study: recurrent model vs attention model with hour and channel forcing embeddings
+  (`src/models/surge_jepa_v7e.py`, `scripts/experiments/train_v7e.py`) vs Chronos-bolt;
+- GEFSv12 reforecast check re-issued so that every catalogued peak lies inside the 48-h horizon
+  (`fetch_gefs_cycles.py`, `eval_gefs.py --inits outputs/gfs_inits_inwindow.csv`);
+- event-level peak coverage, hourly coverage by lead, and window-continuity counters in `eval_full.py`.
+
+`docs/experiment_ledger.md` lists every experiment on disk and where the manuscript uses it;
+`docs/protocol_symmetry_audit.md`, `docs/gtsm_symmetry_audit.md`, and `docs/audit2_results.md` record the
+audits that led to these changes. Per-window predictions of the GTSM comparison (160 MB) are regenerable with
+`eval_gtsm_symmetric.py` and are not committed.
 
 ## Repository map
 
