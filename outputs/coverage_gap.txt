@@ -1,0 +1,26 @@
+COVERAGE GAP INDICATOR (World Bank EN.POP.EL5M.ZS x SP.POP.TOTL 2023; classification catalog/surge_forecast_systems.csv)
+countries with data: 215; population below 5 m elevation: 321 million
+  national       countries  47  pop below 5 m   245.4 M (76.3%)  split gauges  810  test gauges  69
+  none_found     countries  54  pop below 5 m    53.5 M (16.6%)  split gauges   39  test gauges  10
+  not_assessed   countries  79  pop below 5 m     3.3 M ( 1.0%)  split gauges    3  test gauges   0
+  regional_only  countries  35  pop below 5 m    19.3 M ( 6.0%)  split gauges   29  test gauges   4
+without a national service (regional_only + none_found): 89 countries, 73 M people below 5 m (23%), 68 corpus gauges
+marine test gauges (84) by service status: national 69, none_found 10, regional_only 4, not_assessed 1
+marine test gauges in countries without a national service: base_prat (CHL), bintulu (MYS), dakar (SEN), funchal (PRT), gan (MDV), juan_fernandez (CHL), kanton (KIR), lamu (KEN), madeira (BRA), paita (PER), pohnpei (FSM), puerto_montt (CHL), san_juan (PER), sandakan (MYS)
+largest low-lying populations without a national service:
+  Egypt, Arab Rep.                   18.7 M below 5 m  (none_found; corpus gauges 0)
+  Nigeria                             8.0 M below 5 m  (none_found; corpus gauges 0)
+  Brazil                              4.7 M below 5 m  (none_found; corpus gauges 4)
+  Myanmar                             3.7 M below 5 m  (regional_only; corpus gauges 0)
+  Malaysia                            3.6 M below 5 m  (regional_only; corpus gauges 17)
+  United Arab Emirates                2.8 M below 5 m  (regional_only; corpus gauges 0)
+  Turkiye                             2.2 M below 5 m  (none_found; corpus gauges 0)
+  Iraq                                2.1 M below 5 m  (none_found; corpus gauges 0)
+  Madagascar                          1.3 M below 5 m  (regional_only; corpus gauges 0)
+  Ecuador                             1.3 M below 5 m  (none_found; corpus gauges 5)
+  Korea, Dem. People's Rep.           1.3 M below 5 m  (regional_only; corpus gauges 0)
+  Senegal                             1.3 M below 5 m  (none_found; corpus gauges 1)
+  Venezuela, RB                       1.2 M below 5 m  (none_found; corpus gauges 0)
+  Tunisia                             1.1 M below 5 m  (none_found; corpus gauges 0)
+  Saudi Arabia                        1.1 M below 5 m  (regional_only; corpus gauges 0)
+not assessed: 79 countries, 3.3 M below 5 m

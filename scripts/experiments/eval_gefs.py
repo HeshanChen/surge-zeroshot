@@ -93,7 +93,9 @@ for _, r in ev.iterrows():
         wu = interp({h: -g['ugrd_hgt'][h] for h in hh3}, a[Tctx-1, 1])
         wv = interp({h: -g['vgrd_hgt'][h] for h in hh3}, a[Tctx-1, 2])
         ms = interp({h: g['pres_msl'][h]/100.0 for h in hh3}, a[Tctx-1, 3])
-        tp3 = {h: max(g['apcp_sfc'][h], 0)/3.0 for h in hh3}
+        # reforecast APCP records alternate 0-3, 0-6, 6-9, 6-12, ...: the 6-hourly records are 6-h accumulations that
+        # include the preceding 3-h record, so rebuild 3-h buckets before converting to an hourly rate (fix 2026-09-05)
+        acc = g['apcp_sfc']; tp3 = {h: max((acc[h] - acc[h-3]) if (h % 6 == 0 and (h-3) in acc) else acc[h], 0)/3.0 for h in hh3}
         tp = interp(tp3, a[Tctx-1, 4])
         Fg = np.stack([wu, wv, ms, tp], 1)
         ffg = ((Fg-fmu)/fsd).T[None].astype('float32')

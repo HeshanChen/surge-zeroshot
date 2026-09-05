@@ -34,6 +34,13 @@ The manuscript now reports every result on evaluation windows whose 256 rows are
   (`fetch_gefs_cycles.py`, `eval_gefs.py --inits outputs/gfs_inits_inwindow.csv`);
 - event-level peak coverage, hourly coverage by lead, and window-continuity counters in `eval_full.py`.
 
+Two additions on the same day: a season-scale real-forecast check (`scripts/experiments/fetch_gefs_season.py`,
+`eval_gefs_season.py`; GEFSv12 reforecast control forcing at every 00 UTC cycle of 2012 and 2017, sampled at the 84 test
+gauges and committed under `outputs/gefs_season/`, one npz per cycle, so the check reruns without touching AWS) and a
+coverage indicator (`scripts/coverage_gap.py`; `catalog/surge_forecast_systems.csv` with one sourced evidence line per
+country in `docs/surge_forecast_systems_sources.md`; World Bank inputs under `outputs/coverage_gap/`). Both are gated by
+`scripts/verify_numbers_cont.py`.
+
 `docs/experiment_ledger.md` lists every experiment on disk and where the manuscript uses it;
 `docs/protocol_symmetry_audit.md`, `docs/gtsm_symmetry_audit.md`, and `docs/audit2_results.md` record the
 audits that led to these changes. Per-window predictions of the GTSM comparison (160 MB) are regenerable with

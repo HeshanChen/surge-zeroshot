@@ -162,3 +162,33 @@ Applied by `paper/restyle/review3_edits.py` (each replacement asserted once):
 - "level" / "matches" -> "no detectable difference", with an explicit sentence that the intervals do not
   establish equivalence.
 - The 512-gauge replicate is "one observation of run-to-run variation", no longer a "bound".
+
+## 11. Season-scale real-forecast check and coverage indicator (2026-09-05, evening)
+
+Two additions requested after the third read, no retraining.
+
+**Real forecast forcing over two full years** (`scripts/fetch_gefs_season.py`, `scripts/eval_gefs_season.py`,
+`scripts/plot_gefs_season.py`; artifacts `outputs/eval_gefs_season{,_2017,_2012}.{csv,log}`, `_perlead.csv`,
+`gefs_season_perlead.pdf`; sampled forcing `data/raw/gefs_season/*.npz`, one per 00 UTC cycle, 731 files). GEFSv12
+reforecast control member, nearest 0.25-degree point at each of the 84 test gauges, hours 3..48 interpolated to hourly
+and anchored on the reanalysis value at issue time, 3-h precipitation buckets rebuilt from the alternating 3-h / 6-h
+accumulations (the nine-case check had divided the 6-h records by 3; corrected run = `eval_gefs_v3`, mean GEFS RMSE
+48.2 -> 49.3 cm, capture and 8/9 unchanged). Years 2012 and 2017 (72 and 65 gauges with >= 80% hourly coverage),
+continuous 256-h windows only: 79 gauges, 35,228 windows, 283 p99.9 storm windows.
+Result: pooled skill reanalysis +37.3% / GEFS +30.1% (ratio 0.81); 8 h +28.2 / +24.2; 48 h +41.4 / +32.9; GEFS-forced
+model beats persistence at 72/79 (reanalysis 74/79); median per-gauge RMSE cost +5%; storm RMSE 13.4 / 15.4 / 24.7 cm
+(reanalysis / GEFS / persistence); peak capture 0.65 / 0.69; q99 above peak 47% / 46%; per-year pooled GEFS +30.2
+(2017) and +30.5 (2012). Manuscript: abstract clause, Here-we sentence, Results 1 paragraph, Discussion limits,
+Methods "Real-forecast forcing", ED Table 4 (season), ED Fig. 4 (per-lead), nine-case table moved to the SI with v3
+numbers; the random-windows figure moved to the SI to keep 10 ED items. Runaway bug: `--workers 16` was parsed as a
+year and fetched 2001-2004 cycles for 40 minutes before being stopped; files removed, parser fixed.
+
+**Coverage indicator** (`scripts/coverage_gap.py`; `catalog/surge_forecast_systems.csv` + `docs/surge_forecast_systems_sources.md`
+compiled by a research agent from agency/WMO documentation on 2026-09-05, spot-checked for Egypt and Brazil; World Bank
+EN.POP.EL5M.ZS x SP.POP.TOTL 2023). 321 M people below 5 m; 47 states with a documented national storm-surge service
+hold 245 M (76%); 89 without one (35 regional advisories only, 54 none found) hold 73 M (23%); Egypt 18.7 M, Nigeria
+8.0 M, Brazil 4.7 M lead the gap; 14 of the 84 marine test gauges lie in such countries. Manuscript: introduction
+sentence, Methods "Coverage indicator", Supplementary Table 2 (top 20). Caveat stated in Methods: documentation-based.
+
+**Comoros grounding** for Andrew: `docs/comoros_grounding.md` (ANACM/DTM, DGSC alert chain, no working gauge, SOFF 2024
+diagnostics, Kenneth 2019 impacts, nearest corpus gauge Zanzibar 764 km).

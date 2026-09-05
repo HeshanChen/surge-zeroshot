@@ -25,6 +25,9 @@ generated the artifact.
 | Factor study (298 gauges, Japan held out) | LSTM +15/+14/+31/0.58; attention v7e +7/0/+11/0.38; Chronos −1/+5/+3/0.32; LSTM lower @8h at 71/77 | `outputs/eval_full_lstmq_v2n298_cont.*`, `eval_full_v7e_n298v_cont.*`, `eval_chronos_bolt-small_masked_cont.*` | `eval_full.py`, `baseline_chronos.py --continuous_only` |
 | Pinball proper score | q90 +44.7% (82/84), q99 +47.2% (77/84) | `outputs/eval_pinball_cont.{csv,log}` | `scripts/experiments/eval_pinball.py --continuous_only` |
 | GEFS real-forecast check, nine cases with peaks inside the window | 37.1 → 48.2 cm (pers 73.8); 8/9 beat persistence; capture 0.36; q99 above peak 2/9 | `outputs/eval_gefs_v2.{csv,log}`, `gfs_inits_inwindow.csv` | `scripts/experiments/eval_gefs.py --inits outputs/gfs_inits_inwindow.csv` |
+| Season-scale real-forecast check (2012 + 2017, 79 gauges, 35,228 windows) | pooled +37.3% reanalysis / +30.1% GEFS; 8 h +28.2 / +24.2; 48 h +41.4 / +32.9; 72/79 beat persistence; storm RMSE 13.4 / 15.4 / 24.7 cm; capture 0.65 / 0.69 | `outputs/eval_gefs_season{,_2017,_2012}.{csv,log}`, `_perlead.csv`, `outputs/gefs_season/*.npz` | `scripts/experiments/eval_gefs_season.py 2017 2012` |
+| Nine storm cases, corrected precipitation buckets | 37.1 -> 49.3 cm; capture 0.47 -> 0.36; 8/9 | `outputs/eval_gefs_v3.{csv,log}` | `scripts/experiments/eval_gefs.py --inits outputs/gfs_inits_inwindow.csv --tag _v3` |
+| Coverage indicator | 321 M below 5 m; 89 countries without a national service hold 73 M (23%); 14/84 test gauges | `outputs/coverage_gap.txt`, `coverage_gap_countries.csv`, `catalog/surge_forecast_systems.csv` | `scripts/coverage_gap.py` |
 | Table 1 geographic grouping, rotation union, scaling fit | see file | `outputs/audit2_numbers.txt` | `scripts/audit2_numbers.py` |
 | Every log quantity, all vs continuous | see file | `outputs/eval_log_summary.txt`, `outputs/compare_cont.txt` | `scripts/summarize_eval_logs.py`, `scripts/compare_cont.py` |
 

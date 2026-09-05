@@ -1,0 +1,11 @@
+SEASON-SCALE REAL-FORECAST FORCING: GEFSv12 reforecast control vs reanalysis forcing vs persistence, years [2017]
+gauges evaluated 70; windows 16796 (continuous 256-h records at 00 UTC cycles); storm windows (p99.9) 142
+pooled RMSE skill vs persistence (gauge-mean): reanalysis +37.8% | GEFS +30.2%
+8-h skill: reanalysis +27.9% | GEFS +24.9%   48-h skill: reanalysis +42.2% | GEFS +33.6%
+gauges where GEFS-forced model beats persistence: pooled 64/70, 8 h 64/70   (reanalysis: 66/70, 67/70)
+median per-gauge pooled RMSE degradation reanalysis->GEFS: +4%
+per-lead skill (hour-pooled): L1: rean +14% gefs +15% | L4: rean +29% gefs +25% | L8: rean +33% gefs +30% | L12: rean +30% gefs +22% | L24: rean +39% gefs +27% | L36: rean +43% gefs +32% | L48: rean +45% gefs +34%
+storm-window per-lead skill: L4: rean +8% gefs +16% | L8: rean +14% gefs +16% | L12: rean +31% gefs +24% | L24: rean +39% gefs +26% | L48: rean +43% gefs +38%
+storm-window RMSE (all leads): reanalysis 14.5 | GEFS 16.4 | persistence 24.7 cm
+peak capture at the true peak hour (n=142 storm windows): reanalysis 0.65 | GEFS 0.69 | persistence 0.27
+q99 above the true peak: reanalysis 49% | GEFS 44% of storm windows; hourly q99 coverage reanalysis 0.984 | GEFS 0.983

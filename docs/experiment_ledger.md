@@ -27,6 +27,9 @@ full test set.
 
 | Continuous-window re-evaluation (primary from 2026-09-05) | every headline checkpoint scored on windows whose 256 rows are consecutive hours | `eval_full_<tag>_cont.*` for v2final, rotjp/eu/na, rotoc/r2/r3, eu299, g64..g640, g64ms, g256ms, g512r2, marine, g640marine, c298strat/usjp, n298, v7e_n298v; `eval_gtsm_symmetric_cont.*`; `eval_forcing_only_{v2fonly,_eot2,_predscale,v2final}_cont.csv`; `eval_chronos_bolt-small_masked_cont.*`; `eval_pinball_cont.*`; summaries `compare_cont.txt`, `audit2_numbers.txt`, `eval_log_summary.txt`, `bootstrap_cis_cont.txt` | every table and figure; all-window values in ED Table 5 |
 
+| Season-scale real-forecast forcing (2026-09-05) | GEFSv12 reforecast control at every 00 UTC cycle of 2012 and 2017 vs reanalysis forcing vs persistence, identical continuous windows | `eval_gefs_season{,_2017,_2012}.{csv,log,_perlead.csv}`, `gefs_season_perlead.pdf`, `data/raw/gefs_season/*.npz`, nine-case rerun with corrected precipitation `eval_gefs_v3.*` | Results 1, ED Table 4, ED Fig. 4, SI table |
+| Coverage indicator (2026-09-05) | low-lying population in countries without a national storm-surge service | `coverage_gap.txt`, `coverage_gap_countries.csv`, `catalog/surge_forecast_systems.csv`, `docs/surge_forecast_systems_sources.md` | Introduction, Methods, SI Table 2 |
+
 ## B. Superseded (kept for the record; the paper does not cite them)
 
 | experiment | why superseded | tags |

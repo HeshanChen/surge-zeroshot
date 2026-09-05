@@ -92,4 +92,27 @@ ge = pd.read_csv(f'{O}/eval_gefs_v2.csv'); check('GEFS cases', len(ge), 9)
 check('GEFS mean RMSE reanalysis (cm)', round(ge.rmse_era5.mean(), 1), 37.1, 0.06); check('GEFS mean RMSE GEFS (cm)', round(ge.rmse_gefs.mean(), 1), 48.2, 0.06)
 check('GEFS cases beating persistence', int((ge.rmse_gefs < ge.rmse_per).sum()), 8); check('GEFS peaks inside window', int(ge.peak_in_window.sum()), 9)
 
+# 8b. season-scale real-forecast check (Results 1, ED Table 4, ED Fig. 4)
+se = pd.read_csv(f'{O}/eval_gefs_season.csv'); check('season gauges', len(se), 79); check('season windows', int(se.n_win.sum()), 35228); check('season storm windows', int(se.n_storm.sum()), 283)
+def gs(m, p): return round(100*(1-se[m].mean()/se[p].mean()), 1)
+check('season pooled skill reanalysis (%)', gs('rmse_p_era5', 'rmse_p_pers'), 37.3, 0.06); check('season pooled skill GEFS (%)', gs('rmse_p_gefs', 'rmse_p_pers'), 30.1, 0.06)
+check('season 8-h skill reanalysis (%)', gs('r8_era5', 'r8_pers'), 28.2, 0.06); check('season 8-h skill GEFS (%)', gs('r8_gefs', 'r8_pers'), 24.2, 0.06)
+check('season 48-h skill GEFS (%)', gs('r48_gefs', 'r48_pers'), 32.9, 0.06)
+check('season GEFS wins pooled', int((se.rmse_p_gefs < se.rmse_p_pers).sum()), 72); check('season reanalysis wins pooled', int((se.rmse_p_era5 < se.rmse_p_pers).sum()), 74)
+ts = log('eval_gefs_season.log')
+check('season storm RMSE reanalysis (cm)', grab(ts, r'storm-window RMSE \(all leads\): reanalysis ([\d.]+)'), 13.4, 0.06); check('season storm RMSE GEFS (cm)', grab(ts, r'storm-window RMSE \(all leads\): reanalysis [\d.]+ \| GEFS ([\d.]+)'), 15.4, 0.06)
+check('season peak capture GEFS', grab(ts, r'peak capture at the true peak hour.*?GEFS ([\d.]+)'), 0.69, 0.001)
+for y, want in (('2017', 30.2), ('2012', 30.5)):
+    sy = pd.read_csv(f'{O}/eval_gefs_season_{y}.csv'); check(f'season {y} pooled skill GEFS (%)', round(100*(1-sy.rmse_p_gefs.mean()/sy.rmse_p_pers.mean()), 1), want, 0.06)
+g3 = pd.read_csv(f'{O}/eval_gefs_v3.csv'); check('nine-case GEFS mean RMSE, corrected buckets (cm)', round(g3.rmse_gefs.mean(), 1), 49.3, 0.06); check('nine-case GEFS peak capture', round(g3.cap_gefs.mean(), 2), 0.36, 0.006)
+
+# 9. coverage indicator (introduction, Methods, Supplementary Table)
+cg = pd.read_csv(f'{O}/coverage_gap_countries.csv'); nonat = cg[cg.status.isin(['regional_only', 'none_found'])]
+check('coverage: population below 5 m (M)', round(cg.pop_below5m.sum()/1e6), 321); check('coverage: countries without national service', len(nonat), 89)
+check('coverage: people below 5 m without national service (M)', round(nonat.pop_below5m.sum()/1e6), 73)
+check('coverage: share without national service (%)', round(100*nonat.pop_below5m.sum()/cg.pop_below5m.sum()), 23)
+check('coverage: states with national service and population data', int((cg.status == 'national').sum()), 47)
+cls = pd.read_csv(f'{ROOT}/catalog/surge_forecast_systems.csv'); iso = {n: n.split('-')[-2].upper() for n in d.stn}
+st = cls.set_index('iso3').status; check('coverage: marine test gauges without national service', int(sum(st.get(iso[n], 'x') in ('regional_only', 'none_found') for n in d.stn)), 14)
+
 print(f'\n{len(FAIL)} failures' if FAIL else '\nALL CHECKS PASS'); sys.exit(1 if FAIL else 0)
