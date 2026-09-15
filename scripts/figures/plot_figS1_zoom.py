@@ -16,12 +16,17 @@ ROOT = _ROOT
 
 sa = pd.read_csv(f'{ROOT}/catalog/static_attributes.csv').set_index('name')
 sp = pd.read_csv(f'{ROOT}/catalog/exp_split_final.csv')
-NONMAR_NAMES = ('rak_zuid','trois_rivieres','batiscan','lac_saint_pierre','sorel','port_saint_francois',
-                'becancour','champlain_qc','deschaillons','portneuf_qc','neuville')
+# non-marine = out-of-domain test gauges, the Great Lakes and their connecting channels, the St Lawrence fluvial reach above the
+# head of tide at Portneuf (west of 71.9 W), and the European river reaches of catalog/rotation_test_domain.csv (Elbe above
+# Cuxhaven, Loire above Saint-Nazaire, Rhine-Meuse tidal rivers) plus the Dutch inland waterway Rak Zuid; the rule is applied
+# to every role, so the primary test gauge Varennes (fluvial St Lawrence, kept as registered) is crossed too.
+NONMAR_NAMES = ('rak_zuid', 'schulau', 'stadersand', 'cordemais_60minute', 'goidschalxoord', 'krimpen_ad_lek', 'vlaardingen', 'maassluis')
 def nonmarine(n, fold):
     if fold == 'test_xdom': return True
     la, lo_ = float(sa.loc[n,'lat']), float(sa.loc[n,'lon'])
-    return (41.0 <= la <= 49.5 and -93.5 <= lo_ <= -75.5) or n.startswith(NONMAR_NAMES)
+    if 41.0 <= la <= 49.5 and -93.5 <= lo_ <= -75.5: return True
+    if 45.0 <= la <= 47.2 and -75.5 < lo_ < -71.9: return True
+    return n.split('-')[0] in NONMAR_NAMES
 lo = lambda x: x if x <= 180 else x - 360
 
 def draw_geo(ax, x0, x1, y0, y1):
