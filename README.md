@@ -27,7 +27,7 @@ python scripts/verify_numbers.py        # July 2026 preprint: all evaluation win
 | Real-forecast checks (Extended Data Table 1 and Fig. 3, Supplementary Table 2) | `outputs/eval_gefs_season*.{csv,log}`, `outputs/gefs_season/*.npz` (sampled GEFSv12 reforecast forcing, one file per 00 UTC cycle of 2012 and 2017), `outputs/eval_gefs_v3.{csv,log}` |
 | Architecture factor study (Extended Data Table 4) | `outputs/eval_full_lstmq_v2n298_cont.*`, `outputs/eval_full_v7e_n298v_cont.*`, `outputs/eval_chronos_bolt-small_masked_cont.*`, `outputs/train_v7e_*.log` |
 | Block-bootstrap intervals (Methods) | `outputs/bootstrap_cis_cont.txt` |
-| Dataset chain, effective fold sizes, join share, seismic mask (Methods, Supplementary Table 3 and Fig. 3) | `outputs/audit_universe_loadability.csv`, `outputs/join_share_audit.csv`, `outputs/audit_window_count.csv`, `outputs/seismic_exceedance_audit.csv`, `outputs/tsunami_mask_annex.{csv,tex}`, `outputs/figS3_tsunami_mask.pdf` |
+| Dataset chain, effective fold sizes, join share, seismic mask (Methods, Supplementary Table 3 and Fig. 3) | `outputs/audit_universe_loadability.csv`, `outputs/join_share_audit.csv`, `outputs/audit_window_count.csv`, `outputs/seismic_exceedance_audit.csv`, `outputs/tsunami_mask_annex.csv`, `outputs/tsunami_mask_annex_table.tex`, `outputs/figS3_tsunami_mask.pdf` |
 
 Training logs exist for the seven runs made after run logging was added (September 2026); the earlier runs are
 represented by their checkpoints and evaluation logs. Per-window predictions of the hydrodynamic comparison (160 MB) are

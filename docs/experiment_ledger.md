@@ -70,3 +70,6 @@ gauges where the small arm does fine. By country, the small arm's 12-h skill is 
 shallow-shelf North Sea and Baltic gauges (Germany -15%, Sweden -12%, Denmark -8%, Netherlands -4%) and
 positive in Britain and France (+8%, +9%): the missing regime is the large-amplitude shelf surge, as the paper
 says.
+
+
+Note (2026-09-14): the coverage indicator (people below 5 m without a national surge service) referred to above was withdrawn from the manuscript on 2026-09-10; its scripts, classification table and outputs are not part of the public release.

@@ -192,3 +192,6 @@ sentence, Methods "Coverage indicator", Supplementary Table 2 (top 20). Caveat s
 
 **Comoros grounding** for Andrew: `docs/comoros_grounding.md` (ANACM/DTM, DGSC alert chain, no working gauge, SOFF 2024
 diagnostics, Kenneth 2019 impacts, nearest corpus gauge Zanzibar 764 km).
+
+
+Note (2026-09-14): the coverage indicator (people below 5 m without a national surge service) referred to above was withdrawn from the manuscript on 2026-09-10; its scripts, classification table and outputs are not part of the public release.
