@@ -3,11 +3,13 @@ Window START_YEAR.., 3 threads, resume(skip existing), large 429 backoff.
   python fetch_era5.py            # all final_stations
   python fetch_era5.py sub 400    # country-stratified subset of 400
   python fetch_era5.py 50         # first 50"""
+import os as _os
+_ROOT = _os.environ.get('SURGE_ROOT') or _os.path.abspath(_os.path.join(_os.path.dirname(_os.path.abspath(__file__)), '..', '..'))
 import sys, os, time, json, warnings; warnings.filterwarnings('ignore')
 import pandas as pd, urllib.request, urllib.error
 from concurrent.futures import ThreadPoolExecutor
 from collections import Counter
-ROOT='/Users/heshan/Desktop/surge_fm'; OUT=f'{ROOT}/data/raw/era5'; os.makedirs(OUT, exist_ok=True)
+ROOT=_ROOT; OUT=f'{ROOT}/data/raw/era5'; os.makedirs(OUT, exist_ok=True)
 VARS='wind_speed_10m,wind_direction_10m,pressure_msl,precipitation'; START_YEAR=2000
 def fetch(name):
     out=f'{OUT}/{name}.parquet'

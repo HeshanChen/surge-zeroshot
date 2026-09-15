@@ -1,7 +1,9 @@
 """All-window vs continuous-window evaluation, side by side, for every headline checkpoint (audit-2, 2026-09-05).
 Reads outputs/eval_full_<tag>.log and outputs/eval_full_<tag>_cont.log. -> outputs/compare_cont.txt"""
+import os as _os
+_ROOT = _os.environ.get('SURGE_ROOT') or _os.path.abspath(_os.path.join(_os.path.dirname(_os.path.abspath(__file__)), '..'))
 import re, numpy as np
-ROOT = '/Users/heshan/Desktop/surge_fm'
+ROOT = _ROOT
 TAGS = [('lstmq_v2final', 'deployment 84'), ('lstmq_v2rotjp', 'rotation Japan'), ('lstmq_v2roteu', 'rotation Europe'),
         ('lstmq_v2rotna', 'rotation N America'), ('lstmq_v2rotocr2', 'rotation Oceania (median run)'), ('lstmq_v2eu299', 'Europe 299 arm'),
         ('lstmq_v2g64', 'ladder 64'), ('lstmq_v2g128', 'ladder 128'), ('lstmq_v2g256', 'ladder 256'), ('lstmq_v2g384', 'ladder 384'),

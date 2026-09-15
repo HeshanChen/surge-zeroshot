@@ -6,10 +6,12 @@ u, v, msl, apcp of shape (16 hours, n_gauges), plus hours, gauges, and the APCP 
 disk (a full year of global records would be ~17 GB). Resumable: cycles with an existing npz are skipped.
 Usage: python3 scripts/fetch_gefs_season.py 2017 2012 [--workers 16]     (log: outputs/gefs_season_fetch.log)
 Written 2026-09-05 for the season-scale real-forecast evaluation (scripts/eval_gefs_season.py)."""
+import os as _os
+_ROOT = _os.environ.get('SURGE_ROOT') or _os.path.abspath(_os.path.join(_os.path.dirname(_os.path.abspath(__file__)), '..', '..'))
 import sys, os, re, time, io, urllib.request, concurrent.futures as cf
 import numpy as np, pandas as pd
 import eccodes as ec
-ROOT = '/Users/heshan/Desktop/surge_fm'; OUT = f'{ROOT}/data/raw/gefs_season'; os.makedirs(OUT, exist_ok=True)
+ROOT = _ROOT; OUT = f'{ROOT}/data/raw/gefs_season'; os.makedirs(OUT, exist_ok=True)
 BASE = 'https://noaa-gefs-retrospective.s3.amazonaws.com/GEFSv12/reforecast'
 VARS = {'ugrd_hgt': ('UGRD', '10 m above ground'), 'vgrd_hgt': ('VGRD', '10 m above ground'),
         'pres_msl': ('PRES', 'mean sea level'), 'apcp_sfc': ('APCP', 'surface')}

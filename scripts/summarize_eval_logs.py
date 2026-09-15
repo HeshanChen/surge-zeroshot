@@ -2,8 +2,10 @@
 continuous windows side by side. Reads outputs/eval_full_<tag>{,_cont}.log.
 Usage: python3 scripts/summarize_eval_logs.py [tag ...]   (default: the manuscript's headline tags)
 -> prints a table and writes outputs/eval_log_summary.txt"""
+import os as _os
+_ROOT = _os.environ.get('SURGE_ROOT') or _os.path.abspath(_os.path.join(_os.path.dirname(_os.path.abspath(__file__)), '..'))
 import re, sys
-ROOT = '/Users/heshan/Desktop/surge_fm'
+ROOT = _ROOT
 DEFAULT = ['lstmq_v2final', 'lstmq_v2rotjp', 'lstmq_v2roteu', 'lstmq_v2rotna', 'lstmq_v2rotoc', 'lstmq_v2rotocr2', 'lstmq_v2rotocr3',
            'lstmq_v2eu299', 'lstmq_v2g64', 'lstmq_v2g128', 'lstmq_v2g256', 'lstmq_v2g384', 'lstmq_v2g512', 'lstmq_v2g640',
            'lstmq_v2c298strat', 'lstmq_v2c298usjp', 'lstmq_v2n298', 'v7e_n298v']

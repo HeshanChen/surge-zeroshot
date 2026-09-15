@@ -4,6 +4,8 @@
     observation through a 25-h mean-error bias correction;
 (b) extremes: peak-capture difference (ours minus physics) inside p99.9 storm windows.
 -> outputs/gis_gtsm_delta_sym.{pdf,png}. Does not overwrite the old figure."""
+import os as _os
+_ROOT = _os.environ.get('SURGE_ROOT') or _os.path.abspath(_os.path.join(_os.path.dirname(_os.path.abspath(__file__)), '..', '..'))
 import warnings; warnings.filterwarnings('ignore')
 import matplotlib; matplotlib.use('Agg')
 import matplotlib.pyplot as plt
@@ -12,7 +14,7 @@ import cartopy.crs as ccrs
 import cartopy.feature as cfeature
 import pandas as pd, numpy as np
 
-ROOT = '/Users/heshan/Desktop/surge_fm'
+ROOT = _ROOT
 import sys as _sys
 SUF = _sys.argv[1] if len(_sys.argv) > 1 else ''   # '_cont' = continuous windows only (audit 2)
 plt.rcParams.update({'font.family': 'Helvetica', 'font.size': 7.5, 'axes.linewidth': 0.5})

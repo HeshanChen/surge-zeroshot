@@ -2,6 +2,8 @@
 committed evaluation artifacts. Run `python scripts/verify_numbers.py` — exit 0 means
 every checked claim reproduces from the artifacts in outputs/.
 This script ships with the publication repository as its audit gate."""
+import os as _os
+_ROOT = _os.environ.get('SURGE_ROOT') or _os.path.abspath(_os.path.join(_os.path.dirname(_os.path.abspath(__file__)), '..'))
 import re, sys
 import pandas as pd, numpy as np
 

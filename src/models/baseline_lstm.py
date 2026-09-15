@@ -12,6 +12,8 @@ API mirrors SurgeJEPA_v1.predict_window so scripts/eval_full.py drives it unchan
   predict_window(ctx (B,5,Tctx), ff (B,4,48), Tt, static (B,5), anchor (B)) -> (None, (B,48))
   .L = 1 so eval_full's H//model.L == 48.
 """
+import os as _os
+_ROOT = _os.environ.get('SURGE_ROOT') or _os.path.abspath(_os.path.join(_os.path.dirname(_os.path.abspath(__file__)), '..', '..'))
 import torch, torch.nn as nn
 
 class GlobalLSTM(nn.Module):

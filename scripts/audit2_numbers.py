@@ -2,8 +2,10 @@
 for all windows and continuous windows (audit 2, 2026-09-05): rotation union, continent table (explicit geographic
 grouping), scaling per-doubling fit, gauge-free ladder mapping, factor-study win counts.
 Usage: python3 scripts/audit2_numbers.py  -> prints and writes outputs/audit2_numbers.txt"""
+import os as _os
+_ROOT = _os.environ.get('SURGE_ROOT') or _os.path.abspath(_os.path.join(_os.path.dirname(_os.path.abspath(__file__)), '..'))
 import numpy as np, pandas as pd
-ROOT = '/Users/heshan/Desktop/surge_fm'
+ROOT = _ROOT
 L = []
 def P(*a): s = ' '.join(str(x) for x in a); print(s); L.append(s)
 def load(tag, suf): return pd.read_csv(f'{ROOT}/outputs/eval_full_{tag}{suf}.csv')

@@ -2,6 +2,8 @@
 evaluation windows is asserted directly from the committed artifacts under outputs/. Companion to
 verify_numbers.py, which gates the July preprint numbers (all windows). Run from the repository root:
     python scripts/verify_numbers_cont.py      # exit 0 = every number reproduces"""
+import os as _os
+_ROOT = _os.environ.get('SURGE_ROOT') or _os.path.abspath(_os.path.join(_os.path.dirname(_os.path.abspath(__file__)), '..'))
 import os, re, sys
 import numpy as np, pandas as pd
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -106,13 +108,66 @@ for y, want in (('2017', 30.2), ('2012', 30.5)):
     sy = pd.read_csv(f'{O}/eval_gefs_season_{y}.csv'); check(f'season {y} pooled skill GEFS (%)', round(100*(1-sy.rmse_p_gefs.mean()/sy.rmse_p_pers.mean()), 1), want, 0.06)
 g3 = pd.read_csv(f'{O}/eval_gefs_v3.csv'); check('nine-case GEFS mean RMSE, corrected buckets (cm)', round(g3.rmse_gefs.mean(), 1), 49.3, 0.06); check('nine-case GEFS peak capture', round(g3.cap_gefs.mean(), 2), 0.36, 0.006)
 
-# 9. coverage indicator (introduction, Methods, Supplementary Table)
-cg = pd.read_csv(f'{O}/coverage_gap_countries.csv'); nonat = cg[cg.status.isin(['regional_only', 'none_found'])]
-check('coverage: population below 5 m (M)', round(cg.pop_below5m.sum()/1e6), 321); check('coverage: countries without national service', len(nonat), 89)
-check('coverage: people below 5 m without national service (M)', round(nonat.pop_below5m.sum()/1e6), 73)
-check('coverage: share without national service (%)', round(100*nonat.pop_below5m.sum()/cg.pop_below5m.sum()), 23)
-check('coverage: states with national service and population data', int((cg.status == 'national').sum()), 47)
-cls = pd.read_csv(f'{ROOT}/catalog/surge_forecast_systems.csv'); iso = {n: n.split('-')[-2].upper() for n in d.stn}
-st = cls.set_index('iso3').status; check('coverage: marine test gauges without national service', int(sum(st.get(iso[n], 'x') in ('regional_only', 'none_found') for n in d.stn)), 14)
+# 9. data provenance (Methods: dataset chain, fold sizes, join share, seismic mask, rotation test-set composition, duplicates; Supplementary Table 3)
+import os
+def first(*paths):
+    for q in paths:
+        if os.path.exists(q): return q
+    raise FileNotFoundError(paths)
+sa = pd.read_csv(f'{ROOT}/catalog/static_attributes.csv').set_index('name'); split = pd.read_csv(f'{ROOT}/catalog/exp_split_final.csv')
+uni = pd.read_csv(first(f'{O}/audit_universe_loadability.csv')); check('joined gauges (observations and forcing)', len(uni), 1054)
+load = uni[uni.n_joined >= 3000].stn; check('gauges with at least 3,000 joined hours', len(load), 1047)
+for fold, want, want_eff in (('train', 760, 756), ('val', 40, 39), ('test', 84, 84), ('test_xdom', 16, 15)):
+    names = split[split.fold == fold].name; check(f'fold {fold} nominal', len(names), want); check(f'fold {fold} effective', int(names.isin(load).sum()), want_eff)
+for f, want in (('g64', 63), ('g128', 126), ('g256', 254), ('g384', 380), ('g512', 508), ('g640', 636)):
+    sp2 = pd.read_csv(f'{ROOT}/catalog/exp_split_{f}.csv'); check(f'ladder {f} effective training gauges', int(sp2[sp2.fold == 'train'].name.isin(load).sum()), want)
+for f, want in (('jp_v2', 592), ('eu_v2', 587), ('na_v2', 606), ('oc_v2', 785)):
+    sp2 = pd.read_csv(f'{ROOT}/catalog/exp_split_{f}.csv'); check(f'rotation {f} effective training gauges', int(sp2[sp2.fold == 'train'].name.isin(load).sum()), want)
+lat = sa.lat.astype(float); lon = pd.Series(np.where(sa.lon.values > 180, sa.lon.values - 360, sa.lon.values), index=sa.index)
+def hav(la1, lo1, la2, lo2):
+    la1, lo1, la2, lo2 = map(np.radians, (la1, lo1, la2, lo2)); return 6371*2*np.arcsin(np.sqrt(np.sin((la2-la1)/2)**2 + np.cos(la1)*np.cos(la2)*np.sin((lo2-lo1)/2)**2))
+test = set(split[split.fold.isin(['test', 'test_xdom'])].name); pool = set(split[split.fold.isin(['train', 'val'])].name); joined = sorted(uni.stn)
+tl, tlo = lat[list(test)].values, lon[list(test)].values
+rest = [n for n in joined if n not in test]; buf = [n for n in rest if ((np.abs(lat[n] - tl) <= 0.5) & (np.abs(lon[n] - tlo) <= 0.5)).any()]
+check('non-test joined gauges inside a 0.5-degree box of a test gauge', len(buf), 127)
+rest2 = [n for n in rest if n not in set(buf)]; left = [n for n in rest2 if n not in pool]; check('joined gauges left after test, buffer and pool', len(left), 27)
+paired = [n for n in left if any(m in pool and abs(lat[m] - lat[n]) <= 0.02 and abs(lon[m] - lon[n]) <= 0.02 for m in rest2)]
+check('dropped members of 0.02-degree pairs whose partner is in the pool', len(paired), 23); check('gauges the catalogue cleaning had excluded', len(left) - len(paired), 4)
+clean = set(pd.read_csv(f'{ROOT}/catalog/clean_stations.csv').name); check('those four are absent from clean_stations.csv', int(sum(n not in clean for n in left if n not in paired)), 4)
+npairs = sum(1 for i, a in enumerate(joined) for b in joined[i+1:] if abs(lat[a] - lat[b]) <= 0.02 and abs(lon[a] - lon[b]) <= 0.02); check('0.02-degree pairs among all joined gauges', npairs, 26)
+js = pd.read_csv(first(f'{O}/join_share_audit.csv', f'{O}/join_share_audit_2026-09-14.csv')); ld = js[js.joined_h >= 3000]
+check('median share of the surge record that joins (%)', round(100*ld.share_all.median()), 44); check('join share lower quartile (%)', round(100*ld.share_all.quantile(.25)), 27)
+check('join share upper quartile (%)', round(100*ld.share_all.quantile(.75)), 73); check('join share minimum (%)', round(100*ld.share_all.min()), 1)
+aff = ld[ld.forcing_gap_post >= 0.23]; check('gauges losing at least 23% of post-2000 hours at the join', len(aff), 251)
+check('largest post-2000 loss (%)', round(100*aff.forcing_gap_post.max()), 78); check('median post-2000 loss among them (%)', round(100*aff.forcing_gap_post.median()), 54)
+check('largest post-2000 loss among the other gauges (%)', round(100*ld[ld.forcing_gap_post < 0.23].forcing_gap_post.max()), 20)
+wc = pd.read_csv(first(f'{O}/audit_window_count.csv')); wc = wc[wc.stn.isin(split.name)]; share = wc.n_masked_out / wc.n_joined
+check('seismic mask median share of hours (%)', round(100*share.median(), 1), 0.8); check('seismic mask share Japan (%)', round(100*share[wc.country == 'jpn'].median(), 1), 2.2); check('seismic mask share Germany (%)', round(100*share[wc.country == 'deu'].median(), 1), 0.1)
+sx = pd.read_csv(f'{O}/seismic_exceedance_audit.csv'); check('gauges losing more than 10% of p99.9 exceedance hours', int((sx.frac_p999_masked > 0.10).sum()), 16); check('largest such share (%)', round(100*sx.frac_p999_masked.max()), 45)
+dom = pd.read_csv(first(f'{ROOT}/catalog/rotation_test_domain.csv', f'{O}/rotation_test_domain_2026-09-14.csv')); dom['nonmarine'] = dom.nonmarine_class.fillna('').astype(str).str.len() > 0
+for rot, want in (('North America', 80), ('Europe', 7), ('Oceania', 1), ('Japan', 0)): check(f'non-marine gauges in the {rot} rotation test set', int(dom[dom.rotation == rot].nonmarine.sum()), want)
+qc = pd.read_csv(f'{ROOT}/catalog/processing_qc.csv').set_index('name')
+union = {'all': [0, 0], 'marine': [0, 0], 'dedup': [0, 0]}; pairs_per = {}
+for rot, tag in (('Japan', 'lstmq_v2rotjp'), ('Europe', 'lstmq_v2roteu'), ('North America', 'lstmq_v2rotna'), ('Oceania', 'lstmq_v2rotocr2')):
+    r = csv(f'{tag}_cont'); nm = set(dom[(dom.rotation == rot) & dom.nonmarine].stn); m = r[~r.stn.isin(nm)]
+    names = r.stn.tolist(); drop = set(); npair = 0
+    for i, a in enumerate(names):
+        for b in names[i+1:]:
+            if hav(lat[a], lon[a], lat[b], lon[b]) < 2.0: npair += 1; drop.add(a if qc.gap_frac.get(a, 0) >= qc.gap_frac.get(b, 0) else b)
+    pairs_per[rot] = npair; dd = r[~r.stn.isin(drop)]
+    for k, x in (('all', r), ('marine', m), ('dedup', dd)): union[k][0] += int((x.rmse_p < x.prmse_p).sum()); union[k][1] += len(x)
+    if rot == 'North America':
+        check('North America marine-only pooled skill (%)', round(sk(m)), 16); check('North America marine-only 8-h skill (%)', round(sk(m, 'r8', 'p8')), 14)
+        check('North America marine-only NNSE@8h', round(m.n8.mean(), 3), 0.713); check('North America marine-only wins', int((m.rmse_p < m.prmse_p).sum()), 110); check('North America marine-only gauges', len(m), 134)
+        check('North America non-marine pooled skill (%)', round(sk(r[r.stn.isin(nm)])), -4)
+    else: check(f'{rot} pooled skill change when restricted to marine gauges (points, <=0.2)', round(abs(sk(m) - sk(r)), 1) <= 0.2, True)
+    check(f'{rot} pooled skill change after dropping duplicate pairs (points, <=0.2)', round(abs(sk(dd) - sk(r)), 1) <= 0.2, True)
+check('duplicate pairs within 2 km inside rotation test sets (Europe)', pairs_per['Europe'], 7); check('duplicate pairs (North America)', pairs_per['North America'], 2); check('duplicate pairs (Oceania)', pairs_per['Oceania'], 7)
+check('rotation union wins', union['all'][0], 477); check('rotation union gauges', union['all'][1], 633)
+check('rotation union wins, marine gauges only', union['marine'][0], 414); check('rotation union gauges, marine only', union['marine'][1], 545)
+check('rotation union wins after dropping duplicates', union['dedup'][0], 465); check('rotation union gauges after dropping duplicates', union['dedup'][1], 617)
+ta = pd.read_csv(f'{O}/tsunami_mask_annex.csv').set_index('event')
+for ev, hrs, gauges, status in (('Tohoku 2011', 105, 354, 'removed'), ('Sumatra 2004', 138, 276, 'removed'), ('Sandy 2012', 0, 76, 'kept'), ('Haiyan 2013', 0, 0, 'kept')):
+    check(f'seismic mask annex {ev}: hours removed', int(ta.loc[ev, 'hours_removed']), hrs); check(f'seismic mask annex {ev}: gauges inside the radius', int(ta.loc[ev, 'gauges_in_radius_of_largest']), gauges); check(f'seismic mask annex {ev}: largest surge', ta.loc[ev, 'peak_status'], status)
 
 print(f'\n{len(FAIL)} failures' if FAIL else '\nALL CHECKS PASS'); sys.exit(1 if FAIL else 0)

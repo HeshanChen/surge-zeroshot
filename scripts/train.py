@@ -6,9 +6,11 @@ baseline. Same recipe as train_baseline_lstm.py; head n_out=3 (point, q90, q99),
 point + unweighted pinball(.90,.99) on quantiles (v5 pattern). BEST by point RMSE@8h.
 -> outputs/baseline_lstmq_best.pt ; verdict: eval_full --model lstmq
 """
+import os as _os
+_ROOT = _os.environ.get('SURGE_ROOT') or _os.path.abspath(_os.path.join(_os.path.dirname(_os.path.abspath(__file__)), '..'))
 import sys, math, time, warnings, argparse; warnings.filterwarnings('ignore')
 import torch, pandas as pd, numpy as np
-sys.path.insert(0, '/Users/heshan/Desktop/surge_fm/src')
+sys.path.insert(0, f'{_ROOT}/src')
 from models.baseline_lstm import GlobalLSTM
 from data.dataset_v0 import load_station, ROOT
 ap = argparse.ArgumentParser()
@@ -22,7 +24,7 @@ class _Tee:
     def __init__(self, path): self.f = open(path, 'w'); self.stdout = sys.stdout
     def write(self, x): self.f.write(x); self.stdout.write(x)
     def flush(self): self.f.flush(); self.stdout.flush()
-sys.stdout = _Tee(f'/Users/heshan/Desktop/surge_fm/outputs/train_lstmq{args.tag}.log')   # persist the training log (audit 2026-09-04)
+sys.stdout = _Tee(f'{_ROOT}/outputs/train_lstmq{args.tag}.log')   # persist the training log (audit 2026-09-04)
 dev = 'mps' if torch.backends.mps.is_available() else 'cpu'; print(f'device {dev} | split {args.split} | tag {args.tag!r}', flush=True)
 Tctx, Ttgt, W = 208, 48, 256
 TAUS = (0.90, 0.99); LAM_Q = 1.0

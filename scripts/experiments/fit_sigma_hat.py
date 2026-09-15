@@ -11,6 +11,8 @@ wind-speed q99, MSLP std. Target: log sigma_s. Trained on the 760 training gauge
 
 Usage:  python scripts/fit_sigma_hat.py [--eot] [--out PATH]
 """
+import os as _os
+_ROOT = _os.environ.get('SURGE_ROOT') or _os.path.abspath(_os.path.join(_os.path.dirname(_os.path.abspath(__file__)), '..', '..'))
 import sys, warnings; warnings.filterwarnings('ignore')
 import numpy as np, pandas as pd
 from sklearn.ensemble import GradientBoostingRegressor

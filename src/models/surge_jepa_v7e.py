@@ -7,6 +7,8 @@ and no channel embedding, so its output is invariant to reversing the forcing ho
 study attributes to recurrence. v7e adds a learned hour embedding (48) and a learned channel embedding (4)
 to each forcing token; everything else (encoder, predictor, quantile heads, zero-initialised residual head,
 loss) is inherited unchanged from v7. Same CFG, same param count up to the two small embedding tables."""
+import os as _os
+_ROOT = _os.environ.get('SURGE_ROOT') or _os.path.abspath(_os.path.join(_os.path.dirname(_os.path.abspath(__file__)), '..', '..'))
 import torch, torch.nn as nn
 from models.surge_jepa_v7 import SurgeJEPA_v7, loss_v7, TAUS
 

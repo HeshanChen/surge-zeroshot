@@ -1,10 +1,12 @@
 """Download ALL GESLA station parquet files from the public S3 bucket to local disk."""
+import os as _os
+_ROOT = _os.environ.get('SURGE_ROOT') or _os.path.abspath(_os.path.join(_os.path.dirname(_os.path.abspath(__file__)), '..', '..'))
 import warnings; warnings.filterwarnings('ignore')
 import s3fs, os, time
 from concurrent.futures import ThreadPoolExecutor
 fs=s3fs.S3FileSystem(anon=True)
 files=fs.ls('gesla-dataset/parquet_files')
-LOCAL='/Users/heshan/Desktop/surge_fm/data/raw/gesla'; os.makedirs(LOCAL, exist_ok=True)
+LOCAL=f'{_ROOT}/data/raw/gesla'; os.makedirs(LOCAL, exist_ok=True)
 def dl(f):
     out=os.path.join(LOCAL, f.split('/')[-1])
     if os.path.exists(out) and os.path.getsize(out)>0: return os.path.getsize(out)

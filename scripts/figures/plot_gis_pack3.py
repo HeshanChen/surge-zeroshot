@@ -1,6 +1,8 @@
 """GIS pack, part 3: (F) case-study storm maps — GEFS reforecast 10 m wind speed field +
 MSLP contours at the forecast hour nearest each observed surge peak, gauge starred.
 Panel order mirrors the case-study figure."""
+import os as _os
+_ROOT = _os.environ.get('SURGE_ROOT') or _os.path.abspath(_os.path.join(_os.path.dirname(_os.path.abspath(__file__)), '..', '..'))
 import warnings, glob; warnings.filterwarnings('ignore')
 import matplotlib; matplotlib.use('Agg')
 import matplotlib.pyplot as plt
@@ -8,7 +10,7 @@ import cartopy.crs as ccrs
 import cartopy.feature as cfeature
 import pandas as pd, numpy as np, xarray as xr
 
-ROOT = '/Users/heshan/Desktop/surge_fm'
+ROOT = _ROOT
 plt.rcParams.update({'font.family': 'Helvetica', 'font.size': 7.5, 'axes.linewidth': 0.5})
 sa = pd.read_csv(f'{ROOT}/catalog/static_attributes.csv').set_index('name')
 

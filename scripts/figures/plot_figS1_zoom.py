@@ -2,15 +2,17 @@
 (a) Great Lakes + St Lawrence  (b) NW European estuaries. Same encoding as the main map:
 color = role (train/val/test), cross = non-marine. 50m coastline + lakes overlay.
 -> outputs/figS1_zoom.{pdf,png}"""
+import os as _os
+_ROOT = _os.environ.get('SURGE_ROOT') or _os.path.abspath(_os.path.join(_os.path.dirname(_os.path.abspath(__file__)), '..', '..'))
 import sys, json, warnings; warnings.filterwarnings('ignore')
-sys.path.insert(0, '/Users/heshan/Desktop/surge_fm/scripts')
+sys.path.insert(0, f'{_ROOT}/scripts')
 import matplotlib; matplotlib.use('Agg')
 from pubstyle import apply, save_pub, PAL, W2, panel_label
 apply()
 import pandas as pd
 import matplotlib.pyplot as plt
 from matplotlib.patches import Polygon as MplPolygon
-ROOT = '/Users/heshan/Desktop/surge_fm'
+ROOT = _ROOT
 
 sa = pd.read_csv(f'{ROOT}/catalog/static_attributes.csv').set_index('name')
 sp = pd.read_csv(f'{ROOT}/catalog/exp_split_final.csv')

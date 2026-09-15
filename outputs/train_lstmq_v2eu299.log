@@ -1,0 +1,20 @@
+device mps | split exp_split_eu299v.csv | tag '_v2eu299'
+train windows 190943 | LAM_Q 1.0
+params 6.35M
+budget: 12 epochs x 2983 steps/epoch = 35796 optimizer steps
+epoch 0 (fresh=persistence): pooled 8.39/8.39 | @8h 6.34/6.34 | ptcap 0.29 q99cap 0.29 cov99 0.502
+ep 1/12 loss 0.786(Lg0.644 Lq0.143) 506s
+ep 2/12 loss 0.901(Lg0.762 Lq0.139) 656s
+ep 3/12 loss 0.668(Lg0.531 Lq0.137) | pooled 6.51/8.39 | @8h 5.15/6.34 skill +19% | ptcap 0.48 q99cap 0.89 cov99 0.987 <- BEST@8h(val) 825s
+ep 4/12 loss 0.904(Lg0.763 Lq0.140) 983s
+ep 5/12 loss 0.902(Lg0.762 Lq0.140) 1139s
+ep 6/12 loss 0.688(Lg0.569 Lq0.120) | pooled 6.36/8.39 | @8h 5.03/6.34 skill +21% | ptcap 0.49 q99cap 0.88 cov99 0.982 <- BEST@8h(val) 1307s
+ep 7/12 loss 0.542(Lg0.430 Lq0.113) 1461s
+ep 8/12 loss 0.717(Lg0.596 Lq0.121) 1615s
+ep 9/12 loss 0.658(Lg0.523 Lq0.135) | pooled 6.36/8.39 | @8h 4.97/6.34 skill +22% | ptcap 0.50 q99cap 0.86 cov99 0.977 <- BEST@8h(val) 1784s
+ep 10/12 loss 1.119(Lg0.964 Lq0.155) 1938s
+ep 11/12 loss 0.507(Lg0.390 Lq0.117) 2095s
+ep 12/12 loss 0.591(Lg0.462 Lq0.129) | pooled 6.34/8.39 | @8h 4.97/6.34 skill +22% | ptcap 0.50 q99cap 0.85 cov99 0.972 <- BEST@8h(val) 2266s
+
+BEST val RMSE@8h 4.97cm -> outputs/baseline_lstmq_v2eu299_best.pt (last-epoch weights: baseline_lstmq_v2eu299.pt)
+Verdict: python scripts/eval_full.py --model lstmq --ckpt outputs/baseline_lstmq_best.pt --residual --tag lstmq_best

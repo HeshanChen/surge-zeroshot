@@ -7,12 +7,14 @@ eval_gefs.py), with 3-h precipitation buckets rebuilt from the reforecast's 0-3 
 Inputs: data/raw/gefs_season/{YYYYMMDD00}.npz from scripts/fetch_gefs_season.py.
 Usage: python3 scripts/eval_gefs_season.py 2017 2012 [--device mps] [--tag NAME]
 -> outputs/eval_gefs_season{tag}.csv (per gauge) + .log (aggregate) + _perlead.csv (skill by lead)"""
+import os as _os
+_ROOT = _os.environ.get('SURGE_ROOT') or _os.path.abspath(_os.path.join(_os.path.dirname(_os.path.abspath(__file__)), '..', '..'))
 import sys, os, glob, warnings; warnings.filterwarnings('ignore')
 import numpy as np, pandas as pd, torch
-sys.path.insert(0, '/Users/heshan/Desktop/surge_fm/src')
+sys.path.insert(0, f'{_ROOT}/src')
 from models.baseline_lstm import GlobalLSTM
 from data.dataset_v0 import load_station
-ROOT = '/Users/heshan/Desktop/surge_fm'
+ROOT = _ROOT
 Tctx, H, W = 208, 48, 256
 YEARS = [int(a) for a in sys.argv[1:] if a.isdigit() and len(a) == 4]
 DEV = sys.argv[sys.argv.index('--device') + 1] if '--device' in sys.argv else 'cpu'
@@ -27,7 +29,7 @@ def sfeat(n):
     return np.array([np.cos(la)*np.cos(lo), np.cos(la)*np.sin(lo), np.sin(la), float(r.tidal_range_m), float(r.form_factor)], dtype='float32')
 arr = np.stack([sfeat(n) for n in tr]); smu = arr.mean(0); ssd = arr.std(0) + 1e-6
 dev = torch.device(DEV if (DEV != 'mps' or torch.backends.mps.is_available()) else 'cpu')
-m = GlobalLSTM(n_out=3); m.load_state_dict(torch.load(f'{ROOT}/outputs/baseline_lstmq_v2final_best.pt', map_location='cpu')); m.eval().to(dev)
+m = GlobalLSTM(n_out=3); m.load_state_dict(torch.load(f'{ROOT}/models/deploy_760_best.pt', map_location='cpu')); m.eval().to(dev)
 
 # ---- GEFS cycles: stack all npz into arrays indexed by cycle ----
 files = sorted(f for y in YEARS for f in glob.glob(f'{ROOT}/data/raw/gefs_season/{y}*.npz'))

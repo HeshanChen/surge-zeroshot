@@ -15,13 +15,15 @@ mean removed. Here GTSM is high-passed with the same 720-h centered window (gtsm
 mean-aligned version (gtsm_al) is kept for reference. Same 80 gauges, same 48-h windows,
 same seismic mask as eval_gtsm.py.
 -> outputs/eval_gtsm_symmetric.csv (per gauge) + outputs/eval_gtsm_symmetric.log"""
+import os as _os
+_ROOT = _os.environ.get('SURGE_ROOT') or _os.path.abspath(_os.path.join(_os.path.dirname(_os.path.abspath(__file__)), '..', '..'))
 import sys, warnings; warnings.filterwarnings('ignore')
 import torch, pandas as pd, numpy as np
 from scipy.stats import binomtest, wilcoxon
-sys.path.insert(0, '/Users/heshan/Desktop/surge_fm/src')
+sys.path.insert(0, f'{_ROOT}/src')
 from models.baseline_lstm import GlobalLSTM
 from data.dataset_v0 import seismic_mask
-ROOT = '/Users/heshan/Desktop/surge_fm'
+ROOT = _ROOT
 Tctx, W, H = 208, 256, 48
 DIST_GATE_KM = 25.0
 import argparse
@@ -48,8 +50,8 @@ arr = np.stack([sfeat(n) for n in tr]); smu = arr.mean(0); ssd = arr.std(0)+1e-6
 SF_true = {n: (sfeat(n)-smu)/ssd for n in te}
 SF_eot = {n: (sfeat(n, True)-smu)/ssd for n in te}
 
-m_fl = GlobalLSTM(n_out=3); m_fl.load_state_dict(torch.load(f'{ROOT}/outputs/baseline_lstmq_v2final_best.pt', map_location='cpu')); m_fl.eval()
-m_gf = GlobalLSTM(n_out=3); m_gf.load_state_dict(torch.load(f'{ROOT}/outputs/baseline_lstmq_v2fonly_best.pt', map_location='cpu')); m_gf.eval()
+m_fl = GlobalLSTM(n_out=3); m_fl.load_state_dict(torch.load(f'{ROOT}/models/deploy_760_best.pt', map_location='cpu')); m_fl.eval()
+m_gf = GlobalLSTM(n_out=3); m_gf.load_state_dict(torch.load(f'{ROOT}/models/gaugefree_760_best.pt', map_location='cpu')); m_gf.eval()
 
 def load_with_time(name):
     s = pd.read_parquet(f'{ROOT}/data/processed/{name}.parquet')['surge']; s = s.where(s.abs() < 4)

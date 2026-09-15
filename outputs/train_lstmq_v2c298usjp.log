@@ -1,0 +1,20 @@
+device mps | split exp_split_c298usjp.csv | tag '_v2c298usjp'
+train windows 157627 | LAM_Q 1.0
+params 6.35M
+budget: 12 epochs x 2462 steps/epoch = 29544 optimizer steps
+epoch 0 (fresh=persistence): pooled 9.15/9.15 | @8h 7.43/7.43 | ptcap 0.30 q99cap 0.30 cov99 0.502
+ep 1/12 loss 0.707(Lg0.566 Lq0.141) 180s
+ep 2/12 loss 0.665(Lg0.526 Lq0.139) 301s
+ep 3/12 loss 0.622(Lg0.497 Lq0.125) | pooled 8.13/9.15 | @8h 6.88/7.43 skill +7% | ptcap 0.33 q99cap 0.81 cov99 0.982 <- BEST@8h(val) 443s
+ep 4/12 loss 0.690(Lg0.558 Lq0.132) 563s
+ep 5/12 loss 0.569(Lg0.443 Lq0.126) 683s
+ep 6/12 loss 0.473(Lg0.373 Lq0.100) | pooled 8.19/9.15 | @8h 6.84/7.43 skill +8% | ptcap 0.36 q99cap 0.81 cov99 0.975 <- BEST@8h(val) 824s
+ep 7/12 loss 0.497(Lg0.385 Lq0.112) 944s
+ep 8/12 loss 0.471(Lg0.366 Lq0.105) 1064s
+ep 9/12 loss 0.338(Lg0.247 Lq0.090) | pooled 7.97/9.15 | @8h 6.90/7.43 skill +7% | ptcap 0.37 q99cap 0.79 cov99 0.976 1205s
+ep 10/12 loss 0.444(Lg0.329 Lq0.115) 1325s
+ep 11/12 loss 0.412(Lg0.304 Lq0.107) 1445s
+ep 12/12 loss 0.390(Lg0.295 Lq0.095) | pooled 7.94/9.15 | @8h 6.85/7.43 skill +8% | ptcap 0.38 q99cap 0.79 cov99 0.974 1586s
+
+BEST val RMSE@8h 6.84cm -> outputs/baseline_lstmq_v2c298usjp_best.pt (last-epoch weights: baseline_lstmq_v2c298usjp.pt)
+Verdict: python scripts/eval_full.py --model lstmq --ckpt outputs/baseline_lstmq_best.pt --residual --tag lstmq_best

@@ -8,10 +8,12 @@ Same windows/split as eval_full ([A] per-lead + pooled, [B-lite] extreme timeste
 compared on identical samples. torch threads capped to 4 to avoid starving the concurrent MPS training (P3).
 Usage: python scripts/baseline_chronos.py [--modelsize bolt-base|bolt-small] [--nstations N]
 """
+import os as _os
+_ROOT = _os.environ.get('SURGE_ROOT') or _os.path.abspath(_os.path.join(_os.path.dirname(_os.path.abspath(__file__)), '..', '..'))
 import sys, warnings, argparse, collections; warnings.filterwarnings('ignore')
 import torch, pandas as pd, numpy as np
 torch.set_num_threads(4)
-sys.path.insert(0, '/Users/heshan/Desktop/surge_fm/src')
+sys.path.insert(0, f'{_ROOT}/src')
 from data.dataset_v0 import load_station, ROOT
 # boto3/botocore on this machine are version-mismatched and only probed by accelerate's SageMaker branch; return empty modules (audit 2026-09-04)
 import importlib.abc, importlib.util, types

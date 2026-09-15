@@ -1,5 +1,7 @@
 """GIS pack, part 2: (C) training-network density/record-length map,
 (D) Port Phillip Bay regime-limit zoom (10m coastline), (E) GTSM head-to-head delta map."""
+import os as _os
+_ROOT = _os.environ.get('SURGE_ROOT') or _os.path.abspath(_os.path.join(_os.path.dirname(_os.path.abspath(__file__)), '..', '..'))
 import warnings; warnings.filterwarnings('ignore')
 import matplotlib; matplotlib.use('Agg')
 import matplotlib.pyplot as plt
@@ -8,7 +10,7 @@ import cartopy.crs as ccrs
 import cartopy.feature as cfeature
 import pandas as pd, numpy as np
 
-ROOT = '/Users/heshan/Desktop/surge_fm'
+ROOT = _ROOT
 plt.rcParams.update({'font.family': 'Helvetica', 'font.size': 7.5, 'axes.linewidth': 0.5})
 OCEAN, LAND, COAST = '#eef4f9', '#f0efe9', '#b9b7b0'
 import sys as _sys

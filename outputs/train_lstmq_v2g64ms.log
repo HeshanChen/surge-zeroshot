@@ -1,0 +1,151 @@
+device mps | split exp_split_g64.csv | tag '_v2g64ms'
+train windows 34525 | LAM_Q 1.0
+params 6.35M
+budget: 143 epochs x 539 steps/epoch = 77077 optimizer steps (matched to target 77028)
+epoch 0 (fresh=persistence): pooled 9.15/9.15 | @8h 7.43/7.43 | ptcap 0.30 q99cap 0.30 cov99 0.502
+ep 1/143 loss 1.627(Lg1.417 Lq0.211) 82s
+ep 2/143 loss 0.783(Lg0.621 Lq0.162) 108s
+ep 3/143 loss 1.047(Lg0.886 Lq0.161) | pooled 7.91/9.15 | @8h 6.47/7.43 skill +13% | ptcap 0.38 q99cap 0.78 cov99 0.985 <- BEST@8h(val) 154s
+ep 4/143 loss 1.421(Lg1.236 Lq0.185) 181s
+ep 5/143 loss 0.942(Lg0.770 Lq0.171) 207s
+ep 6/143 loss 0.791(Lg0.632 Lq0.159) | pooled 7.61/9.15 | @8h 6.14/7.43 skill +17% | ptcap 0.42 q99cap 0.83 cov99 0.986 <- BEST@8h(val) 254s
+ep 7/143 loss 1.128(Lg0.958 Lq0.170) 280s
+ep 8/143 loss 1.034(Lg0.861 Lq0.173) 306s
+ep 9/143 loss 0.927(Lg0.762 Lq0.165) | pooled 7.69/9.15 | @8h 6.06/7.43 skill +18% | ptcap 0.42 q99cap 0.84 cov99 0.982 <- BEST@8h(val) 353s
+ep 10/143 loss 1.045(Lg0.885 Lq0.159) 379s
+ep 11/143 loss 0.879(Lg0.725 Lq0.154) 406s
+ep 12/143 loss 0.794(Lg0.659 Lq0.135) | pooled 7.74/9.15 | @8h 6.23/7.43 skill +16% | ptcap 0.46 q99cap 0.83 cov99 0.973 452s
+ep 13/143 loss 0.592(Lg0.465 Lq0.127) 478s
+ep 14/143 loss 0.716(Lg0.581 Lq0.136) 505s
+ep 15/143 loss 0.784(Lg0.650 Lq0.135) | pooled 7.73/9.15 | @8h 6.29/7.43 skill +15% | ptcap 0.42 q99cap 0.82 cov99 0.973 551s
+ep 16/143 loss 0.884(Lg0.731 Lq0.153) 577s
+ep 17/143 loss 0.797(Lg0.656 Lq0.141) 604s
+ep 18/143 loss 0.874(Lg0.716 Lq0.158) | pooled 7.68/9.15 | @8h 6.00/7.43 skill +19% | ptcap 0.44 q99cap 0.83 cov99 0.968 <- BEST@8h(val) 650s
+ep 19/143 loss 0.693(Lg0.548 Lq0.145) 677s
+ep 20/143 loss 0.585(Lg0.454 Lq0.130) 703s
+ep 21/143 loss 0.704(Lg0.565 Lq0.139) | pooled 7.83/9.15 | @8h 6.21/7.43 skill +16% | ptcap 0.43 q99cap 0.81 cov99 0.968 749s
+ep 22/143 loss 0.781(Lg0.637 Lq0.143) 776s
+ep 23/143 loss 0.582(Lg0.462 Lq0.120) 802s
+ep 24/143 loss 0.691(Lg0.559 Lq0.131) | pooled 7.75/9.15 | @8h 6.12/7.43 skill +18% | ptcap 0.43 q99cap 0.78 cov99 0.967 849s
+ep 25/143 loss 0.604(Lg0.475 Lq0.129) 875s
+ep 26/143 loss 0.554(Lg0.430 Lq0.123) 901s
+ep 27/143 loss 0.767(Lg0.634 Lq0.133) | pooled 7.81/9.15 | @8h 6.18/7.43 skill +17% | ptcap 0.44 q99cap 0.77 cov99 0.954 948s
+ep 28/143 loss 0.432(Lg0.327 Lq0.106) 974s
+ep 29/143 loss 0.526(Lg0.407 Lq0.119) 1000s
+ep 30/143 loss 0.549(Lg0.428 Lq0.122) | pooled 7.95/9.15 | @8h 6.25/7.43 skill +16% | ptcap 0.46 q99cap 0.77 cov99 0.965 1047s
+ep 31/143 loss 0.523(Lg0.406 Lq0.117) 1073s
+ep 32/143 loss 0.586(Lg0.459 Lq0.127) 1100s
+ep 33/143 loss 0.470(Lg0.361 Lq0.109) | pooled 7.83/9.15 | @8h 6.21/7.43 skill +16% | ptcap 0.46 q99cap 0.75 cov99 0.949 1146s
+ep 34/143 loss 0.463(Lg0.356 Lq0.106) 1173s
+ep 35/143 loss 0.415(Lg0.312 Lq0.103) 1199s
+ep 36/143 loss 0.498(Lg0.389 Lq0.108) | pooled 7.87/9.15 | @8h 6.23/7.43 skill +16% | ptcap 0.44 q99cap 0.71 cov99 0.926 1245s
+ep 37/143 loss 0.323(Lg0.228 Lq0.095) 1272s
+ep 38/143 loss 0.321(Lg0.233 Lq0.088) 1298s
+ep 39/143 loss 0.472(Lg0.369 Lq0.103) | pooled 8.11/9.15 | @8h 6.34/7.43 skill +15% | ptcap 0.46 q99cap 0.70 cov99 0.920 1344s
+ep 40/143 loss 0.400(Lg0.296 Lq0.104) 1371s
+ep 41/143 loss 0.472(Lg0.361 Lq0.110) 1397s
+ep 42/143 loss 0.390(Lg0.293 Lq0.097) | pooled 8.04/9.15 | @8h 6.39/7.43 skill +14% | ptcap 0.43 q99cap 0.67 cov99 0.902 1444s
+ep 43/143 loss 0.305(Lg0.218 Lq0.087) 1470s
+ep 44/143 loss 0.319(Lg0.233 Lq0.086) 1496s
+ep 45/143 loss 0.340(Lg0.250 Lq0.090) | pooled 8.10/9.15 | @8h 6.30/7.43 skill +15% | ptcap 0.44 q99cap 0.67 cov99 0.910 1543s
+ep 46/143 loss 0.314(Lg0.225 Lq0.089) 1569s
+ep 47/143 loss 0.272(Lg0.190 Lq0.082) 1595s
+ep 48/143 loss 0.300(Lg0.214 Lq0.086) | pooled 8.01/9.15 | @8h 6.38/7.43 skill +14% | ptcap 0.43 q99cap 0.65 cov99 0.897 1642s
+ep 49/143 loss 0.321(Lg0.233 Lq0.088) 1668s
+ep 50/143 loss 0.226(Lg0.151 Lq0.075) 1695s
+ep 51/143 loss 0.327(Lg0.241 Lq0.086) | pooled 8.09/9.15 | @8h 6.36/7.43 skill +14% | ptcap 0.43 q99cap 0.64 cov99 0.870 1741s
+ep 52/143 loss 0.279(Lg0.198 Lq0.081) 1767s
+ep 53/143 loss 1.061(Lg0.966 Lq0.095) 1794s
+ep 54/143 loss 0.258(Lg0.180 Lq0.078) | pooled 7.99/9.15 | @8h 6.34/7.43 skill +15% | ptcap 0.43 q99cap 0.62 cov99 0.871 1840s
+ep 55/143 loss 0.255(Lg0.176 Lq0.079) 1867s
+ep 56/143 loss 0.268(Lg0.191 Lq0.077) 1893s
+ep 57/143 loss 0.224(Lg0.152 Lq0.073) | pooled 7.90/9.15 | @8h 6.34/7.43 skill +15% | ptcap 0.43 q99cap 0.61 cov99 0.863 1939s
+ep 58/143 loss 0.216(Lg0.143 Lq0.072) 1966s
+ep 59/143 loss 0.219(Lg0.147 Lq0.072) 1992s
+ep 60/143 loss 0.225(Lg0.152 Lq0.073) | pooled 7.92/9.15 | @8h 6.34/7.43 skill +15% | ptcap 0.44 q99cap 0.61 cov99 0.863 2038s
+ep 61/143 loss 0.239(Lg0.169 Lq0.070) 2065s
+ep 62/143 loss 0.230(Lg0.155 Lq0.074) 2091s
+ep 63/143 loss 0.225(Lg0.150 Lq0.075) | pooled 8.03/9.15 | @8h 6.40/7.43 skill +14% | ptcap 0.42 q99cap 0.60 cov99 0.844 2137s
+ep 64/143 loss 0.195(Lg0.128 Lq0.067) 2164s
+ep 65/143 loss 0.196(Lg0.130 Lq0.065) 2190s
+ep 66/143 loss 0.203(Lg0.134 Lq0.069) | pooled 7.96/9.15 | @8h 6.39/7.43 skill +14% | ptcap 0.43 q99cap 0.59 cov99 0.828 2237s
+ep 67/143 loss 0.188(Lg0.125 Lq0.063) 2263s
+ep 68/143 loss 0.198(Lg0.133 Lq0.065) 2289s
+ep 69/143 loss 0.174(Lg0.111 Lq0.063) | pooled 7.88/9.15 | @8h 6.31/7.43 skill +15% | ptcap 0.44 q99cap 0.58 cov99 0.810 2336s
+ep 70/143 loss 0.190(Lg0.126 Lq0.064) 2362s
+ep 71/143 loss 0.159(Lg0.101 Lq0.058) 2388s
+ep 72/143 loss 0.202(Lg0.137 Lq0.065) | pooled 7.96/9.15 | @8h 6.37/7.43 skill +14% | ptcap 0.42 q99cap 0.59 cov99 0.832 2435s
+ep 73/143 loss 0.175(Lg0.110 Lq0.064) 2461s
+ep 74/143 loss 0.173(Lg0.111 Lq0.062) 2488s
+ep 75/143 loss 0.153(Lg0.098 Lq0.056) | pooled 7.96/9.15 | @8h 6.38/7.43 skill +14% | ptcap 0.42 q99cap 0.56 cov99 0.797 2534s
+ep 76/143 loss 0.169(Lg0.110 Lq0.059) 2560s
+ep 77/143 loss 0.171(Lg0.111 Lq0.060) 2587s
+ep 78/143 loss 0.165(Lg0.104 Lq0.061) | pooled 7.87/9.15 | @8h 6.31/7.43 skill +15% | ptcap 0.43 q99cap 0.57 cov99 0.797 2633s
+ep 79/143 loss 0.155(Lg0.098 Lq0.056) 2660s
+ep 80/143 loss 0.214(Lg0.152 Lq0.062) 2686s
+ep 81/143 loss 0.158(Lg0.102 Lq0.056) | pooled 7.88/9.15 | @8h 6.32/7.43 skill +15% | ptcap 0.43 q99cap 0.56 cov99 0.783 2732s
+ep 82/143 loss 0.147(Lg0.092 Lq0.055) 2759s
+ep 83/143 loss 0.137(Lg0.084 Lq0.053) 2785s
+ep 84/143 loss 0.124(Lg0.075 Lq0.049) | pooled 7.85/9.15 | @8h 6.35/7.43 skill +15% | ptcap 0.43 q99cap 0.55 cov99 0.786 2832s
+ep 85/143 loss 0.122(Lg0.072 Lq0.050) 2858s
+ep 86/143 loss 0.169(Lg0.118 Lq0.052) 2884s
+ep 87/143 loss 0.131(Lg0.079 Lq0.052) | pooled 7.90/9.15 | @8h 6.34/7.43 skill +15% | ptcap 0.43 q99cap 0.55 cov99 0.773 2931s
+ep 88/143 loss 0.130(Lg0.082 Lq0.048) 2957s
+ep 89/143 loss 0.112(Lg0.064 Lq0.048) 2984s
+ep 90/143 loss 0.127(Lg0.078 Lq0.049) | pooled 7.88/9.15 | @8h 6.35/7.43 skill +15% | ptcap 0.43 q99cap 0.53 cov99 0.754 3030s
+ep 91/143 loss 0.148(Lg0.096 Lq0.052) 3056s
+ep 92/143 loss 0.101(Lg0.057 Lq0.044) 3083s
+ep 93/143 loss 0.101(Lg0.058 Lq0.044) | pooled 7.89/9.15 | @8h 6.36/7.43 skill +14% | ptcap 0.43 q99cap 0.53 cov99 0.750 3129s
+ep 94/143 loss 0.108(Lg0.063 Lq0.045) 3155s
+ep 95/143 loss 0.124(Lg0.077 Lq0.047) 3182s
+ep 96/143 loss 0.106(Lg0.063 Lq0.043) | pooled 7.92/9.15 | @8h 6.39/7.43 skill +14% | ptcap 0.43 q99cap 0.53 cov99 0.746 3228s
+ep 97/143 loss 0.111(Lg0.067 Lq0.045) 3255s
+ep 98/143 loss 0.108(Lg0.063 Lq0.045) 3281s
+ep 99/143 loss 0.101(Lg0.059 Lq0.042) | pooled 7.87/9.15 | @8h 6.35/7.43 skill +15% | ptcap 0.42 q99cap 0.51 cov99 0.728 3327s
+ep 100/143 loss 0.108(Lg0.063 Lq0.045) 3354s
+ep 101/143 loss 0.091(Lg0.051 Lq0.041) 3380s
+ep 102/143 loss 0.083(Lg0.045 Lq0.038) | pooled 7.90/9.15 | @8h 6.38/7.43 skill +14% | ptcap 0.43 q99cap 0.51 cov99 0.718 3426s
+ep 103/143 loss 0.082(Lg0.044 Lq0.038) 3453s
+ep 104/143 loss 0.118(Lg0.075 Lq0.043) 3479s
+ep 105/143 loss 0.091(Lg0.054 Lq0.037) | pooled 7.89/9.15 | @8h 6.38/7.43 skill +14% | ptcap 0.42 q99cap 0.50 cov99 0.706 3526s
+ep 106/143 loss 0.090(Lg0.051 Lq0.039) 3552s
+ep 107/143 loss 0.086(Lg0.048 Lq0.038) 3578s
+ep 108/143 loss 0.096(Lg0.054 Lq0.041) | pooled 7.89/9.15 | @8h 6.39/7.43 skill +14% | ptcap 0.42 q99cap 0.50 cov99 0.699 3625s
+ep 109/143 loss 0.074(Lg0.040 Lq0.034) 3651s
+ep 110/143 loss 0.080(Lg0.045 Lq0.035) 3677s
+ep 111/143 loss 0.073(Lg0.040 Lq0.034) | pooled 7.91/9.15 | @8h 6.41/7.43 skill +14% | ptcap 0.43 q99cap 0.50 cov99 0.692 3724s
+ep 112/143 loss 0.059(Lg0.029 Lq0.030) 3750s
+ep 113/143 loss 0.070(Lg0.038 Lq0.032) 3777s
+ep 114/143 loss 0.064(Lg0.033 Lq0.031) | pooled 7.93/9.15 | @8h 6.43/7.43 skill +14% | ptcap 0.42 q99cap 0.49 cov99 0.681 3823s
+ep 115/143 loss 0.065(Lg0.033 Lq0.031) 3849s
+ep 116/143 loss 0.074(Lg0.042 Lq0.032) 3875s
+ep 117/143 loss 0.069(Lg0.038 Lq0.031) | pooled 7.94/9.15 | @8h 6.44/7.43 skill +13% | ptcap 0.42 q99cap 0.48 cov99 0.668 3922s
+ep 118/143 loss 0.065(Lg0.035 Lq0.030) 3948s
+ep 119/143 loss 0.081(Lg0.047 Lq0.035) 3975s
+ep 120/143 loss 0.057(Lg0.029 Lq0.028) | pooled 7.94/9.15 | @8h 6.45/7.43 skill +13% | ptcap 0.42 q99cap 0.48 cov99 0.659 4021s
+ep 121/143 loss 0.057(Lg0.029 Lq0.028) 4047s
+ep 122/143 loss 0.084(Lg0.051 Lq0.034) 4074s
+ep 123/143 loss 0.064(Lg0.035 Lq0.030) | pooled 7.95/9.15 | @8h 6.46/7.43 skill +13% | ptcap 0.42 q99cap 0.48 cov99 0.656 4120s
+ep 124/143 loss 0.061(Lg0.032 Lq0.029) 4147s
+ep 125/143 loss 0.052(Lg0.027 Lq0.025) 4173s
+ep 126/143 loss 0.053(Lg0.027 Lq0.026) | pooled 7.97/9.15 | @8h 6.48/7.43 skill +13% | ptcap 0.42 q99cap 0.47 cov99 0.647 4220s
+ep 127/143 loss 0.059(Lg0.031 Lq0.027) 4246s
+ep 128/143 loss 0.049(Lg0.024 Lq0.024) 4272s
+ep 129/143 loss 0.054(Lg0.029 Lq0.026) | pooled 7.98/9.15 | @8h 6.49/7.43 skill +13% | ptcap 0.42 q99cap 0.47 cov99 0.642 4319s
+ep 130/143 loss 0.046(Lg0.022 Lq0.023) 4345s
+ep 131/143 loss 0.052(Lg0.027 Lq0.025) 4371s
+ep 132/143 loss 0.052(Lg0.027 Lq0.025) | pooled 7.99/9.15 | @8h 6.50/7.43 skill +13% | ptcap 0.42 q99cap 0.47 cov99 0.638 4418s
+ep 133/143 loss 0.049(Lg0.026 Lq0.023) 4444s
+ep 134/143 loss 0.058(Lg0.032 Lq0.026) 4471s
+ep 135/143 loss 0.050(Lg0.026 Lq0.025) | pooled 8.00/9.15 | @8h 6.50/7.43 skill +12% | ptcap 0.42 q99cap 0.47 cov99 0.634 4517s
+ep 136/143 loss 0.047(Lg0.024 Lq0.023) 4544s
+ep 137/143 loss 0.057(Lg0.031 Lq0.025) 4570s
+ep 138/143 loss 0.052(Lg0.027 Lq0.025) | pooled 8.00/9.15 | @8h 6.51/7.43 skill +12% | ptcap 0.42 q99cap 0.46 cov99 0.632 4616s
+ep 139/143 loss 0.047(Lg0.024 Lq0.024) 4643s
+ep 140/143 loss 0.049(Lg0.026 Lq0.024) 4669s
+ep 141/143 loss 0.058(Lg0.032 Lq0.025) | pooled 8.00/9.15 | @8h 6.51/7.43 skill +12% | ptcap 0.42 q99cap 0.46 cov99 0.631 4716s
+ep 142/143 loss 0.057(Lg0.031 Lq0.026) 4742s
+ep 143/143 loss 0.062(Lg0.035 Lq0.027) | pooled 8.00/9.15 | @8h 6.51/7.43 skill +12% | ptcap 0.42 q99cap 0.46 cov99 0.631 4788s
+
+BEST val RMSE@8h 6.00cm -> outputs/baseline_lstmq_v2g64ms_best.pt (last-epoch weights: baseline_lstmq_v2g64ms.pt)
+Verdict: python scripts/eval_full.py --model lstmq --ckpt outputs/baseline_lstmq_best.pt --residual --tag lstmq_best

@@ -1,0 +1,32 @@
+\begin{table}[h]\centering\footnotesize\setlength{\tabcolsep}{3pt}
+\caption{Seismic mask: behaviour on four events and the gauges it affects most. The mask removes hours within graded windows of USGS M7+ earthquakes (M$\geq$7.0 within 1{,}000 km: 72 h; M$\geq$7.5 within 3{,}000 km: 96 h; M$\geq$8.0 within 8{,}000 km: 168 h; Methods). (a) Two tsunamis the mask removes and two storms it leaves intact. Earthquakes: every M7+ event in the window with its distance to the example gauge; events inside the rule radius of their magnitude class are in bold. Strongest tier: the magnitude class, radius and duration of the longest window triggered at the gauge. Hours removed: rows of the gauge's record inside the mask windows; the count falls below the nominal span where the record has gaps (Ko Taphao Noi lacks 31 of the 337 hours in its window; the Onahama record has no rows after 13 March 10:00 UTC in this window, so the rule spans 220 hours but only 175 rows exist, of which 105 are removed). Gauges affected: the number of the 900 split gauges inside the rule radius of the largest earthquake in the window. Largest surge: the largest absolute surge in the window at the example gauge and whether the mask removes it. During Sandy an M7.8 earthquake off Haida Gwaii lay 4,556 km from Atlantic City, outside the 3,000 km radius of its class, so no hour was removed there while 76 Pacific gauges lost hours; no M7+ earthquake occurred during Haiyan. (b) The sixteen gauges that lose the largest share of their p99.9 exceedance hours to the mask, with the share and the number of exceedance hours.}\label{sitab:tsunami}
+\providecommand{\arraybackslash}{\let\\\tabularnewline}
+\makebox[\textwidth][l]{\textbf{a}}\\[0.2em]
+\begin{tabular}{p{0.075\textwidth}p{0.12\textwidth}p{0.25\textwidth}p{0.13\textwidth}rrp{0.11\textwidth}}\toprule
+Event & \raggedright\arraybackslash Example gauge (fold) & \raggedright\arraybackslash M7+ earthquakes in the window (distance to the gauge) & \raggedright\arraybackslash Strongest tier triggered at the gauge & \multicolumn{1}{c}{\shortstack[c]{Hours\\removed}} & \multicolumn{1}{c}{\shortstack[c]{Gauges\\affected}} & \raggedright\arraybackslash Largest surge in the window\\\midrule
+\raggedright\arraybackslash Tohoku 2011 & \raggedright\arraybackslash Onahama, Japan (test) & \raggedright\arraybackslash \textbf{9 Mar 02:45 M7.3, 239 km}; \textbf{11 Mar 05:46 M9.1, 200 km}; \textbf{11 Mar 06:15 M7.9, 76 km}; \textbf{11 Mar 06:25 M7.7, 349 km} & \raggedright\arraybackslash M8.0+: 8,000 km, 168 h & 105 & 354 & \raggedright\arraybackslash 45~cm, removed\\
+\raggedright\arraybackslash Sumatra 2004 & \raggedright\arraybackslash Ko Taphao Noi, Thailand (train) & \raggedright\arraybackslash 23 Dec 14:59 M8.1, 8,785 km; \textbf{26 Dec 00:58 M9.1, 572 km}; \textbf{26 Dec 04:21 M7.2, 612 km} & \raggedright\arraybackslash M8.0+: 8,000 km, 168 h & 138 & 276 & \raggedright\arraybackslash $-$51~cm, removed\\
+\raggedright\arraybackslash Sandy 2012 & \raggedright\arraybackslash Atlantic City, United States (test) & \raggedright\arraybackslash 28 Oct 03:04 M7.8, 4,556 km & \raggedright\arraybackslash none & 0 & 76 & \raggedright\arraybackslash 151~cm, kept\\
+\raggedright\arraybackslash Haiyan 2013 & \raggedright\arraybackslash Cebu, Philippines (train) & \raggedright\arraybackslash none & \raggedright\arraybackslash none & 0 & 0 & \raggedright\arraybackslash 42~cm, kept\\
+\bottomrule\end{tabular}\\[1.0em]
+\makebox[\textwidth][l]{\textbf{b}}\\[0.2em]
+\begin{tabular}{llrr}\toprule
+Gauge & Fold & p99.9 exceedance hours removed & Exceedance hours\\\midrule
+Vung Tau, Vietnam & train & 45\% & 145\\
+Veracruz, Mexico & test & 25\% & 142\\
+Rough and Ready Island, United States & train & 20\% & 177\\
+Port Vila, Vanuatu & train & 20\% & 219\\
+Nouméa, New Caledonia (France) & test & 15\% & 129\\
+Pago Bay, Guam (United States) & train & 13\% & 129\\
+Nagasaki, Japan & test & 13\% & 298\\
+Kahului, United States & train & 13\% & 552\\
+Pointe-à-Pitre, Guadeloupe (France) & train & 12\% & 180\\
+Trident Pier, United States & train & 12\% & 232\\
+Port Chalmers, New Zealand & train & 11\% & 203\\
+Onahama, Japan & test & 11\% & 459\\
+Cabo San Lucas, Mexico & train & 11\% & 216\\
+Esashiko, Japan & train & 11\% & 304\\
+Virginia Key, United States & train & 10\% & 239\\
+Daugavgriva, Latvia & train & 10\% & 107\\
+\bottomrule\end{tabular}
+\end{table}

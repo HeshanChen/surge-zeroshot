@@ -2,18 +2,20 @@
 (inference-time ablation; a model trained with surge context sees OOD zeros, so a trained
 forcing-only variant can only be better). NNSE@8h + RMSE@8h on the 84 marine test gauges.
 CPU (MPS busy). Reference: Ebel densification NNSE 0.556 (their 708-gauge set)."""
+import os as _os
+_ROOT = _os.environ.get('SURGE_ROOT') or _os.path.abspath(_os.path.join(_os.path.dirname(_os.path.abspath(__file__)), '..', '..'))
 import sys, warnings; warnings.filterwarnings('ignore')
 import torch, pandas as pd, numpy as np, argparse
-_ap=argparse.ArgumentParser(); _ap.add_argument('--ckpt', default='outputs/baseline_lstmq_v2final_best.pt'); _ap.add_argument('--tag', default='v2final')
+_ap=argparse.ArgumentParser(); _ap.add_argument('--ckpt', default='models/deploy_760_best.pt'); _ap.add_argument('--tag', default='v2final')
 _ap.add_argument('--sigma_file', default='', help='CSV stn,sigma_hat: use predicted scale instead of the record std (fully gauge-free)')
 _ap.add_argument('--statics_file', default='', help='CSV stn,range_eot,ff_eot: override test-gauge tidal statics with open-tide-model values')
 _ap.add_argument('--continuous_only', action='store_true', help='keep only windows whose 256 rows are consecutive hours (audit 2026-09-05)')
 _args=_ap.parse_args()
-sys.path.insert(0, '/Users/heshan/Desktop/surge_fm/src')
-sys.path.insert(0, '/Users/heshan/Desktop/surge_fm/scripts')
+sys.path.insert(0, f'{_ROOT}/src')
+sys.path.insert(0, f'{_ROOT}/scripts')
 from models.baseline_lstm import GlobalLSTM
 from data.dataset_v0 import load_station
-ROOT = '/Users/heshan/Desktop/surge_fm'
+ROOT = _ROOT
 Tctx, W, H = 208, 256, 48
 
 sa = pd.read_csv(f'{ROOT}/catalog/static_attributes.csv').set_index('name')

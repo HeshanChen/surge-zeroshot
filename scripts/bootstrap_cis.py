@@ -6,8 +6,10 @@ times; skill = 1 - mean(model RMSE)/mean(persistence RMSE) over the resampled ga
 97.5 percentiles. Paired differences (model minus reference RMSE) and win fractions get the same treatment.
 Usage: python3 scripts/bootstrap_cis.py [suffix]   (suffix '' = all-window evals, '_cont' = continuous-window evals)
 -> outputs/bootstrap_cis{suffix}.txt"""
+import os as _os
+_ROOT = _os.environ.get('SURGE_ROOT') or _os.path.abspath(_os.path.join(_os.path.dirname(_os.path.abspath(__file__)), '..'))
 import sys, numpy as np, pandas as pd
-ROOT = '/Users/heshan/Desktop/surge_fm'
+ROOT = _ROOT
 SUF = sys.argv[1] if len(sys.argv) > 1 else ''
 rng = np.random.default_rng(0); B = 4000
 sa = pd.read_csv(f'{ROOT}/catalog/static_attributes.csv').set_index('name')

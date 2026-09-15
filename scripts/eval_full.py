@@ -11,10 +11,11 @@ head-to-head. Prints progress; writes outputs/eval_full_<tag>.csv (per-station) 
 
 Usage: python scripts/eval_full.py --ckpt <path> [--residual] [--device mps] [--nstations N] [--tag NAME]
 """
+import os as _os
+_ROOT = _os.environ.get('SURGE_ROOT') or _os.path.abspath(_os.path.join(_os.path.dirname(_os.path.abspath(__file__)), '..'))
 import sys, warnings, argparse, collections; warnings.filterwarnings('ignore')
 import torch, pandas as pd, numpy as np
-sys.path.insert(0, '/Users/heshan/Desktop/surge_fm/src')
-from models.surge_jepa_v1 import SurgeJEPA_v1
+sys.path.insert(0, f'{_ROOT}/src')
 from data.dataset_v0 import load_station, ROOT
 
 ap = argparse.ArgumentParser()
@@ -92,6 +93,7 @@ elif args.model == 'lstm':
     from models.baseline_lstm import GlobalLSTM
     model = GlobalLSTM().to(dev)
 else:
+    from models.surge_jepa_v1 import SurgeJEPA_v1   # legacy JEPA checkpoints only; not part of the release
     model = SurgeJEPA_v1(**CFG).to(dev)
 model.load_state_dict(torch.load(args.ckpt, map_location=dev)); model.eval()
 

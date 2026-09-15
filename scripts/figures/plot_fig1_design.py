@@ -3,16 +3,18 @@
 (b) architecture schematic, FULL-WIDTH row, large boxes, no overflow;
 (c) zero-shot output example, full-width short row.
 -> outputs/fig1_design.{pdf,png}"""
+import os as _os
+_ROOT = _os.environ.get('SURGE_ROOT') or _os.path.abspath(_os.path.join(_os.path.dirname(_os.path.abspath(__file__)), '..', '..'))
 import sys, json, warnings; warnings.filterwarnings('ignore')
-sys.path.insert(0, '/Users/heshan/Desktop/surge_fm/scripts')
-sys.path.insert(0, '/Users/heshan/Desktop/surge_fm/src')
+sys.path.insert(0, f'{_ROOT}/scripts')
+sys.path.insert(0, f'{_ROOT}/src')
 import matplotlib; matplotlib.use('Agg')
 from pubstyle import apply, save_pub, PAL, W2, panel_label
 apply()
 import pandas as pd, numpy as np, torch
 import matplotlib.pyplot as plt
 from matplotlib.patches import FancyBboxPatch, FancyArrowPatch, Polygon as MplPolygon
-ROOT = '/Users/heshan/Desktop/surge_fm'
+ROOT = _ROOT
 
 figm, axm = plt.subplots(figsize=(W2, 3.55))
 figc, axc = plt.subplots(figsize=(W2*0.55, 2.2))
@@ -77,7 +79,7 @@ def sfeat(n):
                      float(r.tidal_range_m), float(r.form_factor)], dtype='float32')
 arrst = np.stack([sfeat(n) for n in trn]); smu_, ssd_ = arrst.mean(0), arrst.std(0) + 1e-6
 sfv = (sfeat(name) - smu_) / ssd_
-m = GlobalLSTM(n_out=3); m.load_state_dict(torch.load(f'{ROOT}/outputs/baseline_lstmq_v2rotjp_best.pt', map_location='cpu')); m.eval()
+m = GlobalLSTM(n_out=3); m.load_state_dict(torch.load(f'{ROOT}/models/rot_japan_best.pt', map_location='cpu')); m.eval()
 with torch.no_grad():
     _, out = m.predict_window(torch.tensor(ctx).float(), torch.tensor(ff).float(), 48,
                               torch.tensor(sfv)[None].float(), torch.tensor([a[st + Tctx - 1, 0] / tstd]).float())

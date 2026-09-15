@@ -5,8 +5,10 @@ The reforecast is issued at 00 UTC only; forecast hours 3..48 (3-hourly), Days:1
 Usage: python3 scripts/fetch_gefs_cycles.py short:YYYYMMDD00 [short:YYYYMMDD00 ...]
        python3 scripts/fetch_gefs_cycles.py --from-events short [short ...]   (issue time = (peak - 36 h).floor(day), as in eval_gefs.py)
 Audit 2026-09-05: written so that the storm list and issue times are reproducible from code (the original fetch had no script)."""
+import os as _os
+_ROOT = _os.environ.get('SURGE_ROOT') or _os.path.abspath(_os.path.join(_os.path.dirname(_os.path.abspath(__file__)), '..', '..'))
 import sys, os, re, urllib.request, pandas as pd
-ROOT = '/Users/heshan/Desktop/surge_fm'; OUT = f'{ROOT}/data/raw/gefs'
+ROOT = _ROOT; OUT = f'{ROOT}/data/raw/gefs'
 BASE = 'https://noaa-gefs-retrospective.s3.amazonaws.com/GEFSv12/reforecast'
 VARS = {'ugrd_hgt': ('UGRD', '10 m above ground'), 'vgrd_hgt': ('VGRD', '10 m above ground'),
         'pres_msl': ('PRES', 'mean sea level'), 'apcp_sfc': ('APCP', 'surface')}

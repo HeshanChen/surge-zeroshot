@@ -6,18 +6,20 @@ Each panel: 24h of observed context, then the 48h horizon with ground truth, poi
 and persistence. Model: v2final deliverable (760-station, clean protocol), CPU (ablations own MPS).
 Output: outputs/case_studies_extremes.png
 """
+import os as _os
+_ROOT = _os.environ.get('SURGE_ROOT') or _os.path.abspath(_os.path.join(_os.path.dirname(_os.path.abspath(__file__)), '..', '..'))
 import sys, warnings; warnings.filterwarnings('ignore')
 import torch, pandas as pd, numpy as np
 import matplotlib; matplotlib.use('Agg')
-sys.path.insert(0,'/Users/heshan/Desktop/surge_fm/scripts')
+sys.path.insert(0,f'{_ROOT}/scripts')
 from pubstyle import apply, save_pub, PAL, W2, panel_label
 apply()
 import matplotlib.pyplot as plt
-sys.path.insert(0, '/Users/heshan/Desktop/surge_fm/src')
+sys.path.insert(0, f'{_ROOT}/src')
 from models.baseline_lstm import GlobalLSTM
 from data.dataset_v0 import seismic_mask
-ROOT = '/Users/heshan/Desktop/surge_fm'
-CKPT = f'{ROOT}/outputs/baseline_lstmq_v2final_best.pt'
+ROOT = _ROOT
+CKPT = f'{ROOT}/models/deploy_760_best.pt'
 SPLIT = 'exp_split_final.csv'; N_PANELS = 6
 Tctx, Ttgt, W, H = 208, 48, 256, 48
 

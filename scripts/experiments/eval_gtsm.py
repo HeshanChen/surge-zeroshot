@@ -3,12 +3,14 @@ vs persistence, on the 84 marine test gauges over the 2010-2018 overlap. Same 48
 GTSM is a lead-independent hindcast (its value at t+l is the same regardless of issue time).
 Per-gauge mean difference removed from GTSM (datum/model-mean alignment; disclosed).
 -> outputs/eval_gtsm.csv + .log"""
+import os as _os
+_ROOT = _os.environ.get('SURGE_ROOT') or _os.path.abspath(_os.path.join(_os.path.dirname(_os.path.abspath(__file__)), '..', '..'))
 import sys, warnings; warnings.filterwarnings('ignore')
 import torch, pandas as pd, numpy as np
-sys.path.insert(0, '/Users/heshan/Desktop/surge_fm/src')
+sys.path.insert(0, f'{_ROOT}/src')
 from models.baseline_lstm import GlobalLSTM
 from data.dataset_v0 import load_station
-ROOT = '/Users/heshan/Desktop/surge_fm'
+ROOT = _ROOT
 Tctx, W, H = 208, 256, 48
 
 sa = pd.read_csv(f'{ROOT}/catalog/static_attributes.csv').set_index('name')
@@ -24,7 +26,7 @@ def sfeat(n):
     return np.array([np.cos(la)*np.cos(lo), np.cos(la)*np.sin(lo), np.sin(la), float(r.tidal_range_m), float(r.form_factor)], dtype='float32')
 SF = {n: sfeat(n) for n in tr+te}; arr = np.stack([SF[n] for n in tr]); smu = arr.mean(0); ssd = arr.std(0)+1e-6
 for n in SF: SF[n] = (SF[n]-smu)/ssd
-m = GlobalLSTM(n_out=3); m.load_state_dict(torch.load(f'{ROOT}/outputs/baseline_lstmq_v2final_best.pt', map_location='cpu')); m.eval()
+m = GlobalLSTM(n_out=3); m.load_state_dict(torch.load(f'{ROOT}/models/deploy_760_best.pt', map_location='cpu')); m.eval()
 
 # need timestamps: rebuild the loader join with time index (mirror load_station, keeping index)
 from data.dataset_v0 import seismic_mask

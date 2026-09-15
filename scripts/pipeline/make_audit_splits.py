@@ -9,8 +9,10 @@ exp_split_c298strat.csv  Composition ablation, diverse arm: 298 gauges country-s
 exp_split_c298usjp.csv   Composition ablation, low-diversity arm: every USA and Japan gauge of the same 760 pool
                        (184 + 114 = 298, so count is matched exactly without sampling); same val/test.
 """
+import os as _os
+_ROOT = _os.environ.get('SURGE_ROOT') or _os.path.abspath(_os.path.join(_os.path.dirname(_os.path.abspath(__file__)), '..', '..'))
 import pandas as pd, numpy as np
-ROOT = '/Users/heshan/Desktop/surge_fm'
+ROOT = _ROOT
 rng = np.random.default_rng(0)
 sa = pd.read_csv(f'{ROOT}/catalog/static_attributes.csv').set_index('name')
 fin = pd.read_csv(f'{ROOT}/catalog/exp_split_final.csv')

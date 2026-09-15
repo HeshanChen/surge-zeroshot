@@ -1,17 +1,19 @@
 """Per-lead skill for ALL 48 leads (the full decomposition we preach): v2final on the 84 marine
 test gauges, skill(l) = 1 - <RMSE_mdl(l)>/<RMSE_per(l)>, plus the p99.9 storm-window curve.
 CPU. -> outputs/perlead_full.{pdf,png} + outputs/perlead_full.csv"""
+import os as _os
+_ROOT = _os.environ.get('SURGE_ROOT') or _os.path.abspath(_os.path.join(_os.path.dirname(_os.path.abspath(__file__)), '..', '..'))
 import sys, warnings; warnings.filterwarnings('ignore')
 import torch, pandas as pd, numpy as np
 import matplotlib; matplotlib.use('Agg')
-sys.path.insert(0, '/Users/heshan/Desktop/surge_fm/scripts')
+sys.path.insert(0, f'{_ROOT}/scripts')
 from pubstyle import apply, save_pub, PAL, W1
 apply()
 import matplotlib.pyplot as plt
-sys.path.insert(0, '/Users/heshan/Desktop/surge_fm/src')
+sys.path.insert(0, f'{_ROOT}/src')
 from models.baseline_lstm import GlobalLSTM
 from data.dataset_v0 import load_station
-ROOT = '/Users/heshan/Desktop/surge_fm'
+ROOT = _ROOT
 Tctx, W, H = 208, 256, 48
 CONT = '--continuous_only' in sys.argv; SUF = '_cont' if CONT else ''   # audit 2: continuous windows only
 REPLOT = '--replot' in sys.argv   # redraw from the saved CSV without model inference
@@ -25,7 +27,7 @@ def sfeat(n):
     return np.array([np.cos(la)*np.cos(lo), np.cos(la)*np.sin(lo), np.sin(la), float(r.tidal_range_m), float(r.form_factor)], dtype='float32')
 SF = {n: sfeat(n) for n in tr+te}; arr = np.stack([SF[n] for n in tr]); smu = arr.mean(0); ssd = arr.std(0)+1e-6
 for n in SF: SF[n] = (SF[n]-smu)/ssd
-m = GlobalLSTM(n_out=3); m.load_state_dict(torch.load(f'{ROOT}/outputs/baseline_lstmq_v2final_best.pt', map_location='cpu')); m.eval()
+m = GlobalLSTM(n_out=3); m.load_state_dict(torch.load(f'{ROOT}/models/deploy_760_best.pt', map_location='cpu')); m.eval()
 
 THR = [0.90, 0.95, 0.99, 0.999]
 RM = np.zeros((0, H)); RP = np.zeros((0, H)); SM = {t: [] for t in THR}; SP = {t: [] for t in THR}

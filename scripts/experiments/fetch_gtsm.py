@@ -2,12 +2,14 @@
 streamed year by year; extracts the nearest GTSM output point for each of the 84 marine test
 gauges, hourly-means it, appends to per-gauge parquet, deletes the bulk files.
 Usage: python3 fetch_gtsm.py [y0] [y1]   (default 2000 2018)"""
+import os as _os
+_ROOT = _os.environ.get('SURGE_ROOT') or _os.path.abspath(_os.path.join(_os.path.dirname(_os.path.abspath(__file__)), '..', '..'))
 import sys, os, glob, zipfile, warnings; warnings.filterwarnings('ignore')
 import numpy as np, pandas as pd
 import cdsapi
 from netCDF4 import Dataset
 
-ROOT = '/Users/heshan/Desktop/surge_fm'
+ROOT = _ROOT
 GD = f'{ROOT}/data/raw/gtsm'
 os.makedirs(f'{GD}/series', exist_ok=True)
 y0, y1 = (int(sys.argv[1]) if len(sys.argv) > 1 else 2000), (int(sys.argv[2]) if len(sys.argv) > 2 else 2018)

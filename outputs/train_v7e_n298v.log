@@ -1,0 +1,20 @@
+device mps | split exp_split_n298v.csv | tag '_n298v' | lr 0.0003 | epochs 12
+train stations 298 | train windows 159127 | LAM_Q 1.0
+val stations cached 40
+arch v7e
+params 23.07M
+epoch 0 (fresh=persistence): pooled 11.10/11.10 | @8h 8.19/8.19 | ptcap 0.30 q99cap 0.30 cov99 0.504
+ep 1/12 loss 1.166(Lg0.984 Lq0.181) 741s
+ep 2/12 loss 1.351(Lg1.167 Lq0.184) 1341s
+ep 3/12 loss 1.124(Lg0.944 Lq0.180) | pooled 10.24/11.10 | @8h 8.12/8.19 skill +1% | ptcap 0.43 q99cap 1.00 cov99 0.989 <- BEST@8h(val) 2080s
+ep 4/12 loss 1.666(Lg1.476 Lq0.190) 2682s
+ep 5/12 loss 1.630(Lg1.423 Lq0.207) 3284s
+ep 6/12 loss 1.537(Lg1.364 Lq0.173) | pooled 9.70/11.10 | @8h 7.93/8.19 skill +3% | ptcap 0.44 q99cap 0.90 cov99 0.983 <- BEST@8h(val) 4029s
+ep 7/12 loss 1.904(Lg1.719 Lq0.185) 4633s
+ep 8/12 loss 2.827(Lg2.622 Lq0.205) 5238s
+ep 9/12 loss 0.830(Lg0.662 Lq0.168) | pooled 9.23/11.10 | @8h 7.73/8.19 skill +6% | ptcap 0.44 q99cap 0.89 cov99 0.985 <- BEST@8h(val) 5986s
+ep 10/12 loss 1.004(Lg0.839 Lq0.165) 6592s
+ep 11/12 loss 1.119(Lg0.968 Lq0.151) 7202s
+ep 12/12 loss 0.868(Lg0.709 Lq0.159) | pooled 9.10/11.10 | @8h 7.69/8.19 skill +6% | ptcap 0.45 q99cap 0.90 cov99 0.985 <- BEST@8h(val) 7953s
+
+BEST val RMSE@8h 7.69cm -> outputs/surge_v7e_n298v_best.pt (last-epoch weights: surge_v7e_n298v.pt) | steps 29832

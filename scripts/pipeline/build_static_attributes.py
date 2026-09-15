@@ -1,11 +1,13 @@
 """Static-attribute table (Caravan-for-coasts) for FiLM conditioning — the 'already-have' half.
 Tidal constituents -> form factor + range (utide on raw sea_level, recent 10yr); lat/lon; surge climatology.
 GEBCO-derived (slope/shelf width/depth) added later."""
+import os as _os
+_ROOT = _os.environ.get('SURGE_ROOT') or _os.path.abspath(_os.path.join(_os.path.dirname(_os.path.abspath(__file__)), '..', '..'))
 import sys, os, warnings; warnings.filterwarnings('ignore')
 for v in ('OMP_NUM_THREADS','OPENBLAS_NUM_THREADS','MKL_NUM_THREADS','VECLIB_MAXIMUM_THREADS'): os.environ[v]='1'
 import pandas as pd
 from concurrent.futures import ProcessPoolExecutor
-ROOT='/Users/heshan/Desktop/surge_fm'; sys.path.insert(0,f'{ROOT}/src')
+ROOT=_ROOT; sys.path.insert(0,f'{ROOT}/src')
 def proc(name):
     import pandas as pd; sys.path.insert(0,f'{ROOT}/src')
     from utide import solve; from data.clean_surge import to_hourly, _td64, _amp

@@ -1,100 +1,86 @@
-# Learning transferable storm-surge forecasts from a global tide-gauge network
+# Storm surge forecasts from a global tide-gauge network
 
-Code, frozen splits, model checkpoints, and evaluation artifacts for the manuscript
-*"Learning transferable storm-surge forecasts from a global tide-gauge network"* (Chen and co-author, 2026;
-earlier preprint title *"Zero-shot probabilistic storm-surge forecasting from gauged to ungauged coasts"*).
+Code, frozen splits, model checkpoints and evaluation artifacts for the manuscript *Storm surge forecasts from a global
+tide-gauge network* (Heshan Chen and Andrew Kruczkiewicz, 2026). The July 2026 preprint of the same work carried the title
+*Zero-shot probabilistic storm-surge forecasting from gauged to ungauged coasts*; its artifacts are kept here as the record
+of that version.
 
-Every headline number in the manuscript is asserted directly from the committed evaluation
-artifacts by two audit gates:
+Every number in the manuscript is asserted from the committed artifacts by two audit gates:
 
 ```bash
-python scripts/verify_numbers_cont.py   # September 2026 revision: continuous-window numbers (primary)
-python scripts/verify_numbers.py        # July 2026 preprint: all-window numbers (69 checks)
+python scripts/verify_numbers_cont.py   # manuscript: continuous evaluation windows (the primary set), 168 checks
+python scripts/verify_numbers.py        # July 2026 preprint: all evaluation windows, 69 checks
 ```
 
-See **NUMBERS.md** for the claim-by-claim provenance table (paper number → artifact → producing script).
+`NUMBERS.md` maps every manuscript claim to its artifact and to the script that produced it.
 
-## September 2026 revision
+## What the manuscript uses and where it lives
 
-The manuscript now reports every result on evaluation windows whose 256 rows are consecutive hours
-(`--continuous_only` in `scripts/eval_full.py`, `eval_gtsm_symmetric.py`, `eval_forcing_only.py`,
-`eval_pinball.py`, `baseline_chronos.py`); all-window results remain as the sensitivity set
-(`compare_cont.py`). New experiments and artifacts since the preprint, all under the same clean protocol
-(validation-fold checkpoint selection, seismic-masked records, 12 epochs):
+| Manuscript element | Artifacts and models |
+|---|---|
+| Deployment: 84 pre-registered marine test gauges, 760-gauge model (Table 1, Fig. 2, Extended Data Table 5) | `outputs/eval_full_lstmq_v2final_cont.{csv,log}` (all windows: `eval_full_lstmq_v2final.*`), `outputs/perlead_full_cont.csv`, `models/deploy_760_best.pt` |
+| Four leave-region-out rotations (Fig. 3, Extended Data Table 2) | `outputs/eval_full_lstmq_v2rot{jp,eu,na,ocr2}_cont.*`, `models/rot_*_best.pt`; composition of the test sets (lake, river and inner-estuary gauges) in `catalog/rotation_test_domain.csv` |
+| Europe intervention, fixed-count composition ablation, matched-update control (Results 2 and 3, Methods) | `outputs/eval_full_lstmq_v2eu299_cont.*`, `v2c298strat_cont.*`, `v2c298usjp_cont.*`, `v2g64ms_cont.*`, `v2g256ms_cont.*`; checkpoints under `models/`; training logs `outputs/train_lstmq_v2{eu299,c298strat,c298usjp,g64ms,g256ms}.log` |
+| Scaling ladder, 64 to 760 gauges (Fig. 4, Extended Data Table 3) | `outputs/eval_full_lstmq_v2g{64,128,256,384,512,512r2,640}_cont.*` |
+| Gauge-free ladder and hydrodynamic head-to-head (Table 2, Fig. 5) | `outputs/eval_forcing_only_*_cont.csv`, `outputs/eval_gtsm_symmetric_cont.{csv,log}`, `outputs/gtsm_mapping.csv`, `models/gaugefree_760_best.pt` |
+| Envelopes and pinball scores (Results 6) | `outputs/eval_full_lstmq_v2final_cont.log`, `outputs/eval_pinball_cont.{csv,log}` |
+| Real-forecast checks (Extended Data Table 1 and Fig. 3, Supplementary Table 2) | `outputs/eval_gefs_season*.{csv,log}`, `outputs/gefs_season/*.npz` (sampled GEFSv12 reforecast forcing, one file per 00 UTC cycle of 2012 and 2017), `outputs/eval_gefs_v3.{csv,log}` |
+| Architecture factor study (Extended Data Table 4) | `outputs/eval_full_lstmq_v2n298_cont.*`, `outputs/eval_full_v7e_n298v_cont.*`, `outputs/eval_chronos_bolt-small_masked_cont.*`, `outputs/train_v7e_*.log` |
+| Block-bootstrap intervals (Methods) | `outputs/bootstrap_cis_cont.txt` |
+| Dataset chain, effective fold sizes, join share, seismic mask (Methods, Supplementary Table 3 and Fig. 3) | `outputs/audit_universe_loadability.csv`, `outputs/join_share_audit.csv`, `outputs/audit_window_count.csv`, `outputs/seismic_exceedance_audit.csv`, `outputs/tsunami_mask_annex.{csv,tex}`, `outputs/figS3_tsunami_mask.pdf` |
 
-- symmetric hydrodynamic head-to-head (`scripts/experiments/eval_gtsm_symmetric.py`: GTSM high-passed like the
-  target, 25-h mean-error bias correction, two information tiers) and its map (`plot_gis_gtsm_sym.py`);
-- spatial-block bootstrap intervals (`scripts/bootstrap_cis.py`) replacing per-gauge p-values;
-- Europe corpus intervention (299 vs 593 Europe-free gauges, `catalog/exp_split_eu299v.csv`), fixed-count
-  composition ablation (`exp_split_c298strat.csv`, `exp_split_c298usjp.csv`), matched-update control
-  (64 and 256 gauges at the 760-gauge step budget);
-- clean architecture factor study: recurrent model vs attention model with hour and channel forcing embeddings
-  (`src/models/surge_jepa_v7e.py`, `scripts/experiments/train_v7e.py`) vs Chronos-bolt;
-- GEFSv12 reforecast check re-issued so that every catalogued peak lies inside the 48-h horizon
-  (`fetch_gefs_cycles.py`, `eval_gefs.py --inits outputs/gfs_inits_inwindow.csv`);
-- event-level peak coverage, hourly coverage by lead, and window-continuity counters in `eval_full.py`.
-
-Two additions on the same day: a season-scale real-forecast check (`scripts/experiments/fetch_gefs_season.py`,
-`eval_gefs_season.py`; GEFSv12 reforecast control forcing at every 00 UTC cycle of 2012 and 2017, sampled at the 84 test
-gauges and committed under `outputs/gefs_season/`, one npz per cycle, so the check reruns without touching AWS) and a
-coverage indicator (`scripts/coverage_gap.py`; `catalog/surge_forecast_systems.csv` with one sourced evidence line per
-country in `docs/surge_forecast_systems_sources.md`; World Bank inputs under `outputs/coverage_gap/`). Both are gated by
-`scripts/verify_numbers_cont.py`.
-
-`docs/experiment_ledger.md` lists every experiment on disk and where the manuscript uses it;
-`docs/protocol_symmetry_audit.md`, `docs/gtsm_symmetry_audit.md`, and `docs/audit2_results.md` record the
-audits that led to these changes. Per-window predictions of the GTSM comparison (160 MB) are regenerable with
-`eval_gtsm_symmetric.py` and are not committed.
+Training logs exist for the seven runs made after run logging was added (September 2026); the earlier runs are
+represented by their checkpoints and evaluation logs. Per-window predictions of the hydrodynamic comparison (160 MB) are
+regenerable with `scripts/experiments/eval_gtsm_symmetric.py` and are not committed.
 
 ## Repository map
 
 ```
-src/               model (encoder–decoder LSTM, 6.35M) + data loading + surge extraction
+src/               model (encoder-decoder LSTM, 6.35M parameters), attention model of the factor study, data loading, surge extraction
 scripts/
-  pipeline/        GESLA-3 download → ERA5 point forcing → segmented detide → QC
-  train.py         training (validation-fold checkpoint selection; --forcing_only for gauge-free)
-  eval_full.py     canonical evaluation ([A] per-lead, [B] event-conditioned, [C] peak buckets, [D] quantiles)
-  experiments/     gauge-free ladder (σ̂ regression, EOT20 statics), GTSM head-to-head,
-                   GEFS real-forecast forcing, trailing-window causality check, pinball scores, ENSO stratification
-  figures/         all paper figures
-  verify_numbers.py  audit gate
-catalog/           FROZEN pre-registered splits (deployment + 4 rotations + 7-rung ladder + ablations),
-                   station attributes, QC table, M7+ earthquake catalog (tsunami masking)
-models/            checkpoints of record (deployment, gauge-free, 4 rotation models)
-outputs/           evaluation artifacts of record (per-gauge CSVs + full eval logs) + paper figures
-docs/SPLITS.md     how the frozen splits were constructed (buffers, dedup, stratification)
+  pipeline/        GESLA-3 download, point forcing via Open-Meteo, segmented detide and QC, static attributes, split construction
+  train.py         training (validation-fold checkpoint selection; --forcing_only for the gauge-free variant)
+  eval_full.py     canonical evaluation ([A] per-lead, [B] event-conditioned, [C] peak buckets, [D] quantiles, [W] window continuity)
+  experiments/     gauge-free ladder, hydrodynamic head-to-head, GEFSv12 forcing checks, trailing-window causality check,
+                   pinball scores, ENSO stratification, Chronos baseline, attention model training
+  figures/         every figure of the manuscript, including the seismic-mask annex (tsunami_mask_annex.py)
+  verify_numbers_cont.py, verify_numbers.py   audit gates
+  bootstrap_cis.py, compare_cont.py, audit2_numbers.py, summarize_eval_logs.py   derived tables and intervals
+catalog/           frozen splits (deployment, four rotations, ladder, ablations), station attributes, QC table,
+                   cleaned station list, M7+ earthquake catalogue, rotation test-set domain classification
+models/            fifteen checkpoints of record
+outputs/           evaluation artifacts of record (per-gauge tables and full logs), provenance tables, figures
+docs/              how the splits were built (SPLITS.md), experiment ledger, protocol and evaluation audits
 ```
 
-## Reproducing the pipeline (from raw data)
+## Running the code
 
-1. `python scripts/pipeline/download_gesla.py` — GESLA-3 water levels (public S3).
-2. `python scripts/pipeline/fetch_era5.py` — ERA5 point forcing via Open-Meteo (open, no registration).
-3. `python scripts/pipeline/batch_detide.py` — segmented harmonic detide + 30-day high-pass + QC
-   (validated against NOAA verified water levels; see paper §2.1).
-4. `python scripts/train.py --split catalog/exp_split_final.csv` — trains the deployment model
-   (12 epochs; checkpoint selected by zero-shot skill on the 40-gauge validation fold, never the test fold).
-5. `python scripts/eval_full.py --ckpt models/deploy_760_best.pt --tag myrun` — full evaluation;
-   output format matches `outputs/eval_full_lstmq_v2final.{csv,log}`.
+Every script resolves the repository root from its own location (or from `SURGE_ROOT` if set), so the scripts run from
+any working directory; checkpoints are referenced by their names under `models/`. Raw data (`data/`) is not included;
+steps 1 to 3 rebuild it from public sources (hours of download plus CPU time).
 
-Steps 1–3 rebuild the corpus from public sources (hours of download + CPU). Steps 4–5 reproduce
-the deployment result from the frozen splits. All experiment scripts under `scripts/experiments/`
-are runnable the same way; each writes artifacts in the exact format committed under `outputs/`.
+1. `python scripts/pipeline/download_gesla.py` (GESLA-3 water levels, public S3 bucket)
+2. `python scripts/pipeline/fetch_era5.py` (point forcing via the Open-Meteo historical archive, open, no registration)
+3. `python scripts/pipeline/batch_detide.py` (segmented harmonic detide, 30-day high-pass, QC)
+4. `python scripts/train.py --split catalog/exp_split_final.csv` (12 epochs; checkpoint selected by zero-shot skill on the 40-gauge validation fold, never the test fold)
+5. `python scripts/eval_full.py --model lstmq --ckpt models/deploy_760_best.pt --split exp_split_final.csv --tag myrun --continuous_only`
+   (output format matches `outputs/eval_full_lstmq_v2final_cont.{csv,log}`)
 
-Three helper scripts were certified by regeneration: `extract_eot20_statics.py` and
-`fit_sigma_hat.py` (with and without `--eot`) regenerate their committed artifacts **byte-identically**
-(deterministic; GBR seeded with `random_state=0`).
+Steps 4 and 5 reproduce the deployment result from the frozen splits. `scripts/compare_cont.py` and
+`scripts/audit2_numbers.py` regenerate `outputs/compare_cont.txt` and `outputs/audit2_numbers.txt` from the committed
+evaluation tables; `extract_eot20_statics.py` and `fit_sigma_hat.py` regenerate their artifacts byte-identically.
 
 ## Data sources (all open)
 
 | Source | Use | Access |
 |---|---|---|
-| GESLA-3 tide gauges | water levels / surge targets | public |
-| ERA5 via Open-Meteo | point atmospheric forcing | open, no registration |
+| GESLA-3 tide gauges | water levels, surge targets | public |
+| Open-Meteo historical archive (ERA5, ERA5-Land, IFS) | point atmospheric forcing | open, no registration |
 | EOT20 (SEANOE) | gauge-free tidal statics | open, no registration |
-| USGS M7+ catalog | tsunami/seiche masking | open |
-| GEFSv12 reforecast (AWS) | real-forecast forcing spot check | open |
-| GTSM v3 surge reanalysis (CDS) | physics baseline, comparison only | registration (the only registered product; not part of the forecasting pipeline) |
+| USGS M7+ catalogue | seismic (tsunami and seiche) masking | open |
+| GEFSv12 reforecast (AWS) | real-forecast forcing checks | open |
+| GTSM v3 surge reanalysis (Copernicus CDS) | hydrodynamic baseline, comparison only | registration (the only registered product; not part of the forecasting pipeline) |
 
 ## License
 
-Code and artifacts: MIT. Underlying third-party datasets retain their own licenses/terms.
+Code and artifacts: MIT. The underlying third-party datasets retain their own licences and terms.

@@ -1,17 +1,19 @@
 """Appendix full-page exhibit: 12 UNSELECTED forecast windows — random gauges (continent-stratified,
 seed 0), random times (seed per gauge), no peak criterion. Anti-cherry-picking companion to the
 extreme-event case studies. Model: v2final deliverable, CPU. -> outputs/figS2_random.{pdf,png}"""
+import os as _os
+_ROOT = _os.environ.get('SURGE_ROOT') or _os.path.abspath(_os.path.join(_os.path.dirname(_os.path.abspath(__file__)), '..', '..'))
 import sys, warnings; warnings.filterwarnings('ignore')
 import torch, pandas as pd, numpy as np
 import matplotlib; matplotlib.use('Agg')
-sys.path.insert(0, '/Users/heshan/Desktop/surge_fm/scripts')
+sys.path.insert(0, f'{_ROOT}/scripts')
 from pubstyle import apply, save_pub, PAL, W2, panel_label
 apply()
 import matplotlib.pyplot as plt
-sys.path.insert(0, '/Users/heshan/Desktop/surge_fm/src')
+sys.path.insert(0, f'{_ROOT}/src')
 from models.baseline_lstm import GlobalLSTM
 from data.dataset_v0 import load_station
-ROOT = '/Users/heshan/Desktop/surge_fm'
+ROOT = _ROOT
 Tctx, W, H = 208, 256, 48
 
 sa = pd.read_csv(f'{ROOT}/catalog/static_attributes.csv').set_index('name')
@@ -40,7 +42,7 @@ picks = []
 for c in ['AS','EU','NA','OC','SA','AF']: picks += by.get(c, [])[:2]
 picks = picks[:12]
 
-m = GlobalLSTM(n_out=3); m.load_state_dict(torch.load(f'{ROOT}/outputs/baseline_lstmq_v2final_best.pt', map_location='cpu')); m.eval()
+m = GlobalLSTM(n_out=3); m.load_state_dict(torch.load(f'{ROOT}/models/deploy_760_best.pt', map_location='cpu')); m.eval()
 fig, axes = plt.subplots(4, 3, figsize=(W2, 7.6))
 for k, (name, ax) in enumerate(zip(picks, axes.flat)):
     a = load_station(name)

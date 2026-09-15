@@ -4,8 +4,10 @@ SEISMIC FILTER (2026-07-02): tsunami/seiche hours are masked from the joined rec
 events contaminate percentile-selected extremes; 1952 Aburatsubo case). Rule (USGS M>=7 catalog):
   M>=7.0 within 1000km -> mask [t-1h, t+72h] | M>=7.5 within 3000km -> +96h | M>=8.0 within 8000km -> +168h
 Toggle via MASK_SEISMIC=False for ablation."""
+import os as _os
+_ROOT = _os.environ.get('SURGE_ROOT') or _os.path.abspath(_os.path.join(_os.path.dirname(_os.path.abspath(__file__)), '..', '..'))
 import torch, pandas as pd, numpy as np, glob, os
-ROOT='/Users/heshan/Desktop/surge_fm'
+ROOT=_ROOT
 MASK_SEISMIC=True
 _EQ=None; _SA=None
 def _quakes():

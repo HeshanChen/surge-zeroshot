@@ -4,11 +4,13 @@ windows; compare ERA5-forcing vs GEFS-forcing vs persistence. GEFS 3-hourly -> h
 anchored at ERA5 analysis at issue time (raw units; the 2026-07-03 run de-normalized these already-raw
 anchors a second time, see outputs/eval_gefs_v1_anchorbug.*; fixed 2026-09-04). Conventions: our wu=spd*sin(dir)=-u10, wv=-v10; msl Pa->hPa;
 apcp 3h-accum -> hourly/3. -> outputs/eval_gefs.csv + .log"""
+import os as _os
+_ROOT = _os.environ.get('SURGE_ROOT') or _os.path.abspath(_os.path.join(_os.path.dirname(_os.path.abspath(__file__)), '..', '..'))
 import sys, glob, warnings; warnings.filterwarnings('ignore')
 import torch, pandas as pd, numpy as np, xarray as xr
-sys.path.insert(0, '/Users/heshan/Desktop/surge_fm/src')
+sys.path.insert(0, f'{_ROOT}/src')
 from models.baseline_lstm import GlobalLSTM
-ROOT = '/Users/heshan/Desktop/surge_fm'
+ROOT = _ROOT
 Tctx, W, H = 208, 256, 48
 
 sa = pd.read_csv(f'{ROOT}/catalog/static_attributes.csv').set_index('name')
@@ -25,7 +27,7 @@ def sfeat(n):
     r = sa.loc[n]; la, lo = np.radians(float(r.lat)), np.radians(float(r.lon))
     return np.array([np.cos(la)*np.cos(lo), np.cos(la)*np.sin(lo), np.sin(la), float(r.tidal_range_m), float(r.form_factor)], dtype='float32')
 arr = np.stack([sfeat(n) for n in tr]); smu = arr.mean(0); ssd = arr.std(0)+1e-6
-m = GlobalLSTM(n_out=3); m.load_state_dict(torch.load(f'{ROOT}/outputs/baseline_lstmq_v2final_best.pt', map_location='cpu')); m.eval()
+m = GlobalLSTM(n_out=3); m.load_state_dict(torch.load(f'{ROOT}/models/deploy_760_best.pt', map_location='cpu')); m.eval()
 
 from data.dataset_v0 import seismic_mask
 def load_with_time(name):

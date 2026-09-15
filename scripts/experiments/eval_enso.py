@@ -3,12 +3,14 @@ does the Oceania rotation (no-Australia training) lose disproportionately in par
 ENSO phases, relative to the global deployment control?
 Per-window skill stratified by the ONI phase of the window's issue month.
 -> outputs/eval_enso_<tag>.csv + combined log"""
+import os as _os
+_ROOT = _os.environ.get('SURGE_ROOT') or _os.path.abspath(_os.path.join(_os.path.dirname(_os.path.abspath(__file__)), '..', '..'))
 import sys, warnings; warnings.filterwarnings('ignore')
 import torch, pandas as pd, numpy as np
-sys.path.insert(0, '/Users/heshan/Desktop/surge_fm/src')
+sys.path.insert(0, f'{_ROOT}/src')
 from models.baseline_lstm import GlobalLSTM
 from data.dataset_v0 import seismic_mask
-ROOT = '/Users/heshan/Desktop/surge_fm'
+ROOT = _ROOT
 Tctx, W, H = 208, 256, 48
 
 # ---- ONI phases: season -> center month ----

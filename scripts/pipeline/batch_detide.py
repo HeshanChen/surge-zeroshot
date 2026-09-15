@@ -3,13 +3,15 @@
 Outputs: data/processed/<name>.parquet (clean storm surge) + catalog/processing_qc.csv (per-station QC).
 Multiprocessing (utide is CPU-bound). Each station passes the same gates validated on Battery +
 non-US regimes (segmented de-tide, gross/spike removal, length/gap rejection)."""
+import os as _os
+_ROOT = _os.environ.get('SURGE_ROOT') or _os.path.abspath(_os.path.join(_os.path.dirname(_os.path.abspath(__file__)), '..', '..'))
 import sys, os, warnings; warnings.filterwarnings('ignore')
 for _v in ('OMP_NUM_THREADS','OPENBLAS_NUM_THREADS','MKL_NUM_THREADS','VECLIB_MAXIMUM_THREADS','NUMEXPR_NUM_THREADS'):
     os.environ[_v]='1'                      # 1 BLAS thread per worker -> no oversubscription across processes
 import pandas as pd
 from concurrent.futures import ProcessPoolExecutor
 
-ROOT='/Users/heshan/Desktop/surge_fm'
+ROOT=_ROOT
 OUT=f'{ROOT}/data/processed'
 sys.path.insert(0, f'{ROOT}/src')
 

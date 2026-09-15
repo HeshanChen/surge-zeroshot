@@ -1,5 +1,7 @@
 """Scan all GESLA stations via parquet FOOTER statistics (no data-body reads).
 Outputs catalog/station_index.csv (all) + selected_stations.csv (coastal, >=15yr, dense)."""
+import os as _os
+_ROOT = _os.environ.get('SURGE_ROOT') or _os.path.abspath(_os.path.join(_os.path.dirname(_os.path.abspath(__file__)), '..', '..'))
 import warnings; warnings.filterwarnings('ignore')
 import s3fs, pandas as pd, pyarrow.parquet as pq
 from concurrent.futures import ThreadPoolExecutor
@@ -17,7 +19,7 @@ def info(f):
 with ThreadPoolExecutor(max_workers=32) as ex:
     rows=list(ex.map(info, files))
 df=pd.DataFrame(rows,columns=['name','source','country','yr_start','yr_end','yr_span','n_rows'])
-df.to_csv('/Users/heshan/Desktop/surge_fm/catalog/station_index.csv',index=False)
+df.to_csv(f'{_ROOT}/catalog/station_index.csv',index=False)
 RIVER={'usgs','sfwmd','nwfwmd'}
 df['coastal']=~df.source.isin(RIVER)
 df['ok']=df.coastal & (df.yr_span.fillna(0)>=15) & (df.n_rows.fillna(0)>=15*6000)
@@ -25,5 +27,5 @@ print('scanned',len(df),'| failed',int(df.yr_span.isna().sum()))
 print('coastal(non-river)',int(df.coastal.sum()),'| SELECTED(coastal & >=15yr & dense)',int(df.ok.sum()))
 print('\nyr_span of selected:'); print(df[df.ok].yr_span.describe().round(1).to_string())
 print('\nselected top countries:'); print(df[df.ok].country.value_counts().head(15).to_string())
-df[df.ok].to_csv('/Users/heshan/Desktop/surge_fm/catalog/selected_stations.csv',index=False)
+df[df.ok].to_csv(f'{_ROOT}/catalog/selected_stations.csv',index=False)
 print('\nDONE -> catalog/station_index.csv + selected_stations.csv')

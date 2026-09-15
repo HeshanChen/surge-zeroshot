@@ -1,0 +1,1 @@
+device mps | split exp_split_n298v.csv | tag '_v7noemb_n298v' | lr 0.0003 | epochs 12

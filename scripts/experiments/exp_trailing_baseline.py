@@ -2,12 +2,14 @@
 30-day baseline and trailing despike windows (causal=True), then re-evaluate the delivered
 checkpoint zero-shot on the causally-defined surge. Compares against the centered definition.
 -> data/processed_trailing/*.parquet + outputs/trailing_qc.csv"""
+import os as _os
+_ROOT = _os.environ.get('SURGE_ROOT') or _os.path.abspath(_os.path.join(_os.path.dirname(_os.path.abspath(__file__)), '..', '..'))
 import sys, os, warnings; warnings.filterwarnings('ignore')
 for _v in ('OMP_NUM_THREADS','OPENBLAS_NUM_THREADS','MKL_NUM_THREADS','VECLIB_MAXIMUM_THREADS','NUMEXPR_NUM_THREADS'):
     os.environ[_v]='1'
 import pandas as pd
 from concurrent.futures import ProcessPoolExecutor
-ROOT='/Users/heshan/Desktop/surge_fm'
+ROOT=_ROOT
 OUT=f'{ROOT}/data/processed_trailing'
 sys.path.insert(0, f'{ROOT}/src')
 

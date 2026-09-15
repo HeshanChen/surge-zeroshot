@@ -1,14 +1,16 @@
 """Scaling figure v2 (clean protocol): 7 rungs on the fixed 84-gauge marine test set.
 All numbers parsed from the persisted eval logs (outputs/eval_full_lstmq_v2*.log) — no hardcoding.
 -> outputs/scaling_figure.{pdf,png}"""
+import os as _os
+_ROOT = _os.environ.get('SURGE_ROOT') or _os.path.abspath(_os.path.join(_os.path.dirname(_os.path.abspath(__file__)), '..', '..'))
 import sys, re, warnings; warnings.filterwarnings('ignore')
-sys.path.insert(0, '/Users/heshan/Desktop/surge_fm/scripts')
+sys.path.insert(0, f'{_ROOT}/scripts')
 import matplotlib; matplotlib.use('Agg')
 from pubstyle import apply, save_pub, PAL, W2, panel_label
 apply()
 import pandas as pd
 import matplotlib.pyplot as plt
-ROOT = '/Users/heshan/Desktop/surge_fm'
+ROOT = _ROOT
 import sys as _sys
 SUF = _sys.argv[1] if len(_sys.argv) > 1 else ''   # '_cont' = continuous windows only (audit 2)
 

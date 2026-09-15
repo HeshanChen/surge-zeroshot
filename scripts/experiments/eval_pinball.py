@@ -3,12 +3,14 @@ at tau=0.90 and 0.99 for the q90/q99 trajectories on the 84 marine test gauges, 
 climatological constant-quantile reference (per-gauge q90/q99 of the surge record).
 Skill = 1 - pinball_model/pinball_clim (positive = beats climatological quantiles under a proper score).
 -> outputs/eval_pinball.csv + .log"""
+import os as _os
+_ROOT = _os.environ.get('SURGE_ROOT') or _os.path.abspath(_os.path.join(_os.path.dirname(_os.path.abspath(__file__)), '..', '..'))
 import sys, warnings; warnings.filterwarnings('ignore')
 import torch, pandas as pd, numpy as np
-sys.path.insert(0, '/Users/heshan/Desktop/surge_fm/src')
+sys.path.insert(0, f'{_ROOT}/src')
 from models.baseline_lstm import GlobalLSTM
 from data.dataset_v0 import seismic_mask
-ROOT = '/Users/heshan/Desktop/surge_fm'
+ROOT = _ROOT
 Tctx, W, H = 208, 256, 48
 CONT = '--continuous_only' in sys.argv; SUF = '_cont' if CONT else ''
 
@@ -21,7 +23,7 @@ def sfeat(n):
     r = sa.loc[n]; la, lo = np.radians(float(r.lat)), np.radians(float(r.lon))
     return np.array([np.cos(la)*np.cos(lo), np.cos(la)*np.sin(lo), np.sin(la), float(r.tidal_range_m), float(r.form_factor)], dtype='float32')
 arr = np.stack([sfeat(n) for n in tr]); smu = arr.mean(0); ssd = arr.std(0)+1e-6
-m = GlobalLSTM(n_out=3); m.load_state_dict(torch.load(f'{ROOT}/outputs/baseline_lstmq_v2final_best.pt', map_location='cpu')); m.eval()
+m = GlobalLSTM(n_out=3); m.load_state_dict(torch.load(f'{ROOT}/models/deploy_760_best.pt', map_location='cpu')); m.eval()
 
 def pinball(y, q, tau):
     u = y - q

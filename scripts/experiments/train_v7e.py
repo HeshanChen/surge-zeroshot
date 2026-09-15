@@ -5,9 +5,11 @@ asymmetry of the factor study (LSTM 1e-3 vs transformers 3e-4) can be tested bot
 log is persisted to outputs/train_v7e{tag}.log.
 Usage: python3 scripts/train_v7e.py --split exp_split_n298v.csv --tag _n298v [--lr 3e-4] [--epochs 12]
 Verdict: python3 scripts/eval_full.py --model v7e --ckpt outputs/surge_v7e{tag}_best.pt --residual --split <same split> --tag v7e{tag}"""
+import os as _os
+_ROOT = _os.environ.get('SURGE_ROOT') or _os.path.abspath(_os.path.join(_os.path.dirname(_os.path.abspath(__file__)), '..', '..'))
 import sys, math, time, warnings, argparse; warnings.filterwarnings('ignore')
 import torch, pandas as pd, numpy as np
-sys.path.insert(0, '/Users/heshan/Desktop/surge_fm/src')
+sys.path.insert(0, f'{_ROOT}/src')
 from models.surge_jepa_v7e import SurgeJEPA_v7e, loss_v7e
 from data.dataset_v0 import load_station, ROOT
 ap = argparse.ArgumentParser()

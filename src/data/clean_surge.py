@@ -3,6 +3,8 @@ SEGMENTED harmonic de-tide (8-yr blocks) so decadal drift in tidal amplitude/pha
 bias local extreme peaks (single-fit on 101-yr Battery underestimated Sandy 2.58->1.92).
 Pipeline: native gross clip -> hourly -> segmented utide de-tide (Sa/Ssa + linear trend)
           -> 30-d high-pass -> surge-level spike removal -> QC + record/gap gates."""
+import os as _os
+_ROOT = _os.environ.get('SURGE_ROOT') or _os.path.abspath(_os.path.join(_os.path.dirname(_os.path.abspath(__file__)), '..', '..'))
 import numpy as np, pandas as pd
 from utide import solve, reconstruct
 
