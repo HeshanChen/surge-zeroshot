@@ -51,7 +51,7 @@ for i, (prefix, gname, title, tag, hh, (hw, hh_lat)) in enumerate(CASES):
     ax.plot(lo, la, marker='*', markersize=11, markerfacecolor='#e41a1c', markeredgecolor='none',
              transform=ccrs.PlateCarree(), zorder=6)
     valid = pd.Timestamp(f'{tag[:4]}-{tag[4:6]}-{tag[6:8]}') + pd.Timedelta(hours=hh)
-    ax.set_title(f'{title} — {stn.split("-")[0].replace("_", " ")}\nGEFS +{hh} h, valid {valid:%Y-%m-%d %H} UTC', fontsize=7.0, pad=3)
+    ax.set_title(f'{title}, {stn.split("-")[0].replace("_", " ").title()}\nGEFS +{hh} h, valid {valid:%Y-%m-%d %H} UTC', fontsize=7.0, pad=3)
     ax.text(0.0, 1.07, chr(97+i), transform=ax.transAxes, fontsize=10, fontweight='bold', va='bottom')
     ax.spines['geo'].set_edgecolor('#888888'); ax.spines['geo'].set_linewidth(0.5)
 cax = fig.add_axes([0.33, 0.045, 0.34, 0.014])

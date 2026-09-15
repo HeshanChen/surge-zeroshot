@@ -55,7 +55,7 @@ def draw_stations(ax, x0, x1, y0, y1):
 
 fig, axes = plt.subplots(1, 2, figsize=(W2, 2.9), gridspec_kw=dict(width_ratios=[1.55, 1]))
 draw_geo(axes[0], -95, -69, 41, 50.5); draw_stations(axes[0], -95, -69, 41, 50.5)
-axes[0].set_title('Great Lakes and St. Lawrence')
+axes[0].set_title('Great Lakes and St Lawrence')
 axes[0].set_xlabel('longitude ($^\\circ$)', labelpad=1); axes[0].set_ylabel('latitude ($^\\circ$)')
 draw_geo(axes[1], -4.5, 11, 46, 55.5); h = draw_stations(axes[1], -4.5, 11, 46, 55.5)
 axes[1].set_title('NW European estuaries')

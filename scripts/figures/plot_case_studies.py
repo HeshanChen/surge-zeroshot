@@ -90,7 +90,7 @@ for ax, (_, r) in zip(axes.flat, ev.iterrows()):
     ax.fill_between(hx, out[:, 1], out[:, 2], color=PAL['blue'], alpha=0.18, lw=0, label='q90–q99 envelope')
     ax.axhline(pers, color=PAL['grey'], ls='--', lw=0.7, label='persistence')
     ax.axvline(0, color=PAL['grey'], lw=0.5, alpha=0.6)
-    ax.set_title(f"{r.stn.split('-')[0]}  {str(r.t0)[:10]}\npeak {r.peak:.0f} cm @ +{int(r.lead)} h", fontsize=6.5)
+    ax.set_title(f"{r.stn.split('-')[0].replace('_', ' ').title()}  {str(r.t0)[:10]}\npeak {r.peak:.0f} cm at +{int(r.lead)} h", fontsize=6.5)
     ax.grid(alpha=0.25, lw=0.4)
 for ax in axes[1]: ax.set_xlabel('lead time (h)')
 for ax in axes[:, 0]: ax.set_ylabel('surge (cm)')

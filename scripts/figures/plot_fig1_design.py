@@ -92,7 +92,7 @@ axc.axhline(a[st + Tctx - 1, 0] * 100, c=PAL['grey'], ls='--', lw=0.7, label='pe
 axc.set_xlabel('lead time (h)', labelpad=1); axc.set_ylabel('surge (cm)')
 axc.set_xlim(0, 48); axc.set_ylim(min(tru_h.min(), o[:, 0].min()) - 8, max(tru_h.max(), o[:, 2].max()) + 30)
 axc.legend(loc='upper right', ncol=1, handlelength=1.5, borderaxespad=0.3, labelspacing=0.3)
-axc.set_title('Zero-shot forecast at a held-out gauge (typhoon)', pad=3)
+axc.set_title('Zero-shot forecast at a gauge not used in training (typhoon)', pad=3)
 
 
 figm.tight_layout(pad=0.3); save_pub(figm, f'{ROOT}/outputs/fig1a_map')

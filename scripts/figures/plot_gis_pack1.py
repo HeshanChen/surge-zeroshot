@@ -79,7 +79,7 @@ for i, (tag, name, sub, pacific, letter) in enumerate(ROTS):
                     transform=ccrs.PlateCarree(), zorder=6)
     nneg = int((r.sk < 0).sum())
     psk = 100*(1-r.rmse_p.mean()/r.prmse_p.mean()); sub_txt = f'{psk:+.0f}% pooled' + (f', {sub}' if sub else '')
-    ax.set_title(f'held out: {name}  ({sub_txt}, $n$={len(r)}, {nneg} negative)', fontsize=7.4, pad=3)
+    ax.set_title(f'withheld: {name}  ({sub_txt}, $n$={len(r)}, {nneg} negative)', fontsize=7.4, pad=3)
     ax.text(0.0, 1.05, letter, transform=ax.transAxes, fontsize=10, fontweight='bold', va='bottom')
     ax.spines['geo'].set_edgecolor('#888888'); ax.spines['geo'].set_linewidth(0.5)
     if tag == 'v2rotocr2':

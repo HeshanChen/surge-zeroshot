@@ -48,7 +48,7 @@ scaling 8h: values [17.3, 20.0, 22.7, 26.7, 28.3, 29.7, 30.3]  log-linear slope 
 gauge-free EOT20 statics + predicted sigma (all open)       NNSE@8h 0.593  above climatology 67/84  (cols ['stn', 'rmse8', 'nnse8', 'pk_cap', 'q99_cap', 'sw_rmse', 'cov99', 'cov90'])
 gauge-free local statics + predicted sigma                  NNSE@8h 0.598  above climatology 68/84  (cols ['stn', 'rmse8', 'nnse8', 'pk_cap', 'q99_cap', 'sw_rmse', 'cov99', 'cov90'])
 gauge-free local statics + measured sigma                   NNSE@8h 0.618  above climatology 70/84  (cols ['stn', 'rmse8', 'nnse8', 'pk_cap', 'q99_cap', 'sw_rmse', 'cov99', 'cov90'])
-gauge-free flagship with water level zeroed at inference    NNSE@8h 0.522  above climatology 58/84  (cols ['stn', 'rmse8', 'nnse8', 'pk_cap', 'q99_cap', 'sw_rmse', 'cov99', 'cov90'])
+gauge-free flagship with water level zeroed at inference: no file for v2final_cont
 factor: LSTM lower 8-h RMSE than v7e at 71/77; LSTM pooled +15 @8h +14; v7e pooled +7 @8h -0
 Europe 593 vs 299: n=231 first lower 8-h RMSE at 186/231; pooled +11 vs -0; @8h +11 vs +7
 composition 49-country vs 2-country: n=84 first lower 8-h RMSE at 67/84; pooled +29 vs +7; @8h +24 vs -2

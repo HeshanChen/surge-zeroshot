@@ -65,7 +65,7 @@ for k, (name, ax) in enumerate(zip(picks, axes.flat)):
     ax.plot(hx, o[:, 0], c=PAL['blue'], lw=0.9, label='point')
     ax.axhline(a[st+Tctx-1, 0]*100, c=PAL['grey'], ls='--', lw=0.6, label='persistence')
     ax.axvline(0, c=PAL['grey'], lw=0.4, alpha=0.6)
-    ax.set_title(f"{name.split('-')[0]}", fontsize=6.5)
+    ax.set_title(name.split('-')[0].replace('_', ' ').title(), fontsize=6.5)
     ax.grid(alpha=0.25, lw=0.4)
 for ax in axes[-1]: ax.set_xlabel('lead time (h)')
 for ax in axes[:, 0]: ax.set_ylabel('surge (cm)')

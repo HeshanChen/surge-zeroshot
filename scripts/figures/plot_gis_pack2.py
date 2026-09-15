@@ -79,7 +79,7 @@ fig.text(0.845, 0.87, '\n'.join(lines), fontsize=6.3, va='top', ha='left', lines
 cax = fig.add_axes([0.848, 0.13, 0.012, 0.30])
 cb = fig.colorbar(sc, cax=cax); cb.set_label('pooled skill (%)', fontsize=6.2)
 cb.ax.tick_params(labelsize=5.8, length=2); cb.outline.set_linewidth(0.4)
-fig.suptitle('enclosed lagoons: the reproducible regime limit (Oceania rotation, median run)', fontsize=7.8, y=0.985)
+fig.suptitle('enclosed lagoons of the Oceania rotation (median run)', fontsize=7.8, y=0.985)
 fig.savefig(f'{ROOT}/outputs/gis_ppbay{SUF}.pdf'); fig.savefig(f'{ROOT}/outputs/gis_ppbay{SUF}.png', dpi=170)
 plt.close(fig); print('D ppbay done')
 
