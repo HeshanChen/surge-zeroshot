@@ -87,14 +87,13 @@ Code and artifacts: MIT. The underlying third-party datasets retain their own li
 
 ## How to cite
 
-Each GitHub release of this repository is archived on Zenodo, which assigns a DOI to every version and a concept DOI that
-always resolves to the latest one. Until the concept DOI is written here, https://zenodo.org/badge/latestdoi/1311060085
-resolves to the DOI of the latest archived version.
+Each GitHub release of this repository is archived on Zenodo. The concept DOI 10.5281/zenodo.22787673 always resolves to
+the latest archived version; v1.0.0 (the submission release, September 2026) is 10.5281/zenodo.22787674.
 
-[![DOI](https://zenodo.org/badge/1311060085.svg)](https://zenodo.org/badge/latestdoi/1311060085)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.22787673.svg)](https://doi.org/10.5281/zenodo.22787673)
 
 Software: Chen, H. and Kruczkiewicz, A. (2026). surge-zeroshot: code, frozen splits, evaluation protocol and trained models
-for "Storm surge forecasts from a global tide-gauge network" (v1.0.0). Zenodo. https://zenodo.org/badge/latestdoi/1311060085
+for "Storm surge forecasts from a global tide-gauge network" (v1.0.0). Zenodo. https://doi.org/10.5281/zenodo.22787673
 
 Manuscript: Chen, H. and Kruczkiewicz, A. (2026). Storm surge forecasts from a global tide-gauge network. Submitted.
 

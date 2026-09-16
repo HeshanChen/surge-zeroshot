@@ -12,7 +12,8 @@ authors:
     affiliation: "Columbia Climate School, Columbia University"
     orcid: "https://orcid.org/0000-0002-2425-7308"
 version: 1.0.0
-date-released: "2026-09-15"
+date-released: "2026-09-16"
+doi: 10.5281/zenodo.22787673
 license: MIT
 repository-code: "https://github.com/HeshanChen/surge-zeroshot"
 abstract: "Code, pre-registered split files, continuous-window evaluation protocol, per-gauge evaluation tables, training logs, sampled reforecast forcing, figure scripts and trained model checkpoints for a recurrent neural network trained on 760 GESLA-3 tide gauges with open atmospheric forcing that forecasts storm surge 1 to 48 hours ahead at gauges and regions never used in training."
