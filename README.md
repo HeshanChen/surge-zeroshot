@@ -1,7 +1,7 @@
 # Storm surge forecasts from a global tide-gauge network
 
 Code, frozen splits, model checkpoints and evaluation artifacts for the manuscript *Storm surge forecasts from a global
-tide-gauge network* (Heshan Chen and Andrew Kruczkiewicz, 2026). The July 2026 preprint of the same work carried the title
+tide-gauge network* (Heshan Chen and Andrew Kruczkiewicz, 2026). An earlier draft of the same work (July 2026, never posted or submitted anywhere) carried the title
 *Zero-shot probabilistic storm-surge forecasting from gauged to ungauged coasts*; its artifacts are kept here as the record
 of that version.
 
@@ -9,7 +9,7 @@ Every number in the manuscript is asserted from the committed artifacts by two a
 
 ```bash
 python scripts/verify_numbers_cont.py   # manuscript: continuous evaluation windows (the primary set), 168 checks
-python scripts/verify_numbers.py        # July 2026 preprint: all evaluation windows, 69 checks
+python scripts/verify_numbers.py        # July 2026 draft: all evaluation windows, 69 checks
 ```
 
 `NUMBERS.md` maps every manuscript claim to its artifact and to the script that produced it.

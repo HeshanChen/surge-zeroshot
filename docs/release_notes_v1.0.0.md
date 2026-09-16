@@ -15,7 +15,7 @@ points to; Zenodo archives it and assigns the DOI quoted there.
 - `models/`: 15 trained checkpoints (deployment model, gauge-free variant, rotations, ladder, composition and matched-update
   runs).
 - `outputs/`: per-gauge evaluation tables and logs on continuous evaluation windows (`*_cont`) and on all windows (July 2026
-  preprint), block-bootstrap intervals, the sampled GEFSv12 reforecast forcing at the test gauges, training logs of the seven
+  draft, an earlier version that was never posted or submitted), block-bootstrap intervals, the sampled GEFSv12 reforecast forcing at the test gauges, training logs of the seven
   runs made after run logging was added, the data-provenance audits (dataset chain, effective fold sizes, join share, seismic
   mask annex), and the figures of record.
 - `NUMBERS.md`: every manuscript number, its artifact and the script that produced it.
@@ -24,7 +24,7 @@ points to; Zenodo archives it and assigns the DOI quoted there.
 
 ```bash
 python scripts/verify_numbers_cont.py   # manuscript, continuous windows: 168 checks
-python scripts/verify_numbers.py        # July 2026 preprint, all windows: 69 checks
+python scripts/verify_numbers.py        # July 2026 draft, all windows: 69 checks
 ```
 
 Both exit 0 at this tag.

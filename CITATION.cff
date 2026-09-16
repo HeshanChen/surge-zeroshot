@@ -6,9 +6,11 @@ authors:
   - family-names: Chen
     given-names: Heshan
     affiliation: "Columbia Climate School, Columbia University; Department of Civil and Environmental Engineering, Stanford University"
+    orcid: "https://orcid.org/0009-0006-0388-0279"
   - family-names: Kruczkiewicz
     given-names: Andrew
     affiliation: "Columbia Climate School, Columbia University"
+    orcid: "https://orcid.org/0000-0002-2425-7308"
 version: 1.0.0
 date-released: "2026-09-15"
 license: MIT
@@ -29,7 +31,9 @@ preferred-citation:
   authors:
     - family-names: Chen
       given-names: Heshan
+      orcid: "https://orcid.org/0009-0006-0388-0279"
     - family-names: Kruczkiewicz
       given-names: Andrew
+      orcid: "https://orcid.org/0000-0002-2425-7308"
   year: 2026
   notes: "Manuscript submitted in 2026; this entry will be updated with the journal reference on publication."

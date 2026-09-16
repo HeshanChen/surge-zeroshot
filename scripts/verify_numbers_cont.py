@@ -1,6 +1,6 @@
 """Audit gate for the September 2026 revision (Nature Water draft): every headline number quoted on continuous
 evaluation windows is asserted directly from the committed artifacts under outputs/. Companion to
-verify_numbers.py, which gates the July preprint numbers (all windows). Run from the repository root:
+verify_numbers.py, which gates the July 2026 draft numbers (all windows). Run from the repository root:
     python scripts/verify_numbers_cont.py      # exit 0 = every number reproduces"""
 import os as _os
 _ROOT = _os.environ.get('SURGE_ROOT') or _os.path.abspath(_os.path.join(_os.path.dirname(_os.path.abspath(__file__)), '..'))

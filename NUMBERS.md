@@ -1,7 +1,7 @@
 # Provenance: every manuscript number, its artifact and the script that produced it
 
 Two gates. `scripts/verify_numbers_cont.py` checks the manuscript (continuous evaluation windows, the primary set; 168
-checks). `scripts/verify_numbers.py` checks the July 2026 preprint (all windows; 69 checks). Artifact paths are
+checks). `scripts/verify_numbers.py` checks the July 2026 draft, an earlier version of the manuscript that was never posted or submitted (all windows; 69 checks). Artifact paths are
 committed in this repository. Uncertainty in the manuscript is given as spatial-block bootstrap intervals
 (`outputs/bootstrap_cis_cont.txt`), never as p-values.
 
@@ -36,9 +36,9 @@ committed in this repository. Uncertainty in the manuscript is given as spatial-
 | Table 1 grouping, rotation union, scaling fit | see file | `outputs/audit2_numbers.txt` | `scripts/audit2_numbers.py` |
 | Every log quantity, all vs continuous windows | see file | `outputs/eval_log_summary.txt`, `outputs/compare_cont.txt` | `scripts/summarize_eval_logs.py`, `scripts/compare_cont.py` |
 
-## July 2026 preprint (all windows)
+## July 2026 draft (all windows; earlier version, never posted or submitted)
 
-| Preprint claim | Value | Artifact | Producing script |
+| Draft claim | Value | Artifact | Producing script |
 |---|---|---|---|
 | Deployment pooled / 8-h / NNSE / wins (84 marine gauges) | +39% / +31% / 0.786 / 82 of 84 | `outputs/eval_full_lstmq_v2final.csv` | `scripts/eval_full.py` + `models/deploy_760_best.pt` |
 | Deployment storm per-lead / high-water / capture / tail | +29 to 36% / +43 to 48% / 0.60 / 0.78 | `outputs/eval_full_lstmq_v2final.log` ([B], [C], [D]) | same |
@@ -56,18 +56,18 @@ committed in this repository. Uncertainty in the manuscript is given as spatial-
 | Hydrodynamic head-to-head at 8 h (4.4 vs 8.3 vs 6.4 cm; 79 of 80) | | `outputs/eval_gtsm.{csv,log}`, `outputs/gtsm_mapping.csv` | `scripts/experiments/eval_gtsm.py` |
 | Hydrodynamic exception (p99.9 at 48 h: 13.2 vs 12.5; persistence 27.6) | | `outputs/eval_gtsm.log` | same |
 | GEFS real forcing, six cases (21.5 to 38.2 cm, capture 0.71 to 0.34, 5 of 6) | | `outputs/eval_gefs.csv`, `outputs/gfs_events.csv` | `scripts/experiments/eval_gefs.py` |
-| Correction (September 2026): that run de-normalized the already-raw anchor value twice and inflated the degradation; the artifact is kept unchanged as the record of the preprint, and the corrected nine-case check with every peak inside the horizon is `outputs/eval_gefs_v3.*` (manuscript table above) | | | |
+| Correction (September 2026): that run de-normalized the already-raw anchor value twice and inflated the degradation; the artifact is kept unchanged as the record of the draft, and the corrected nine-case check with every peak inside the horizon is `outputs/eval_gefs_v3.*` (manuscript table above) | | | |
 | Trailing causality (pooled +36, NNSE 0.818, storm 8 h +40, 80 of 84) | | `outputs/eval_trailing_{centered,trailing}.csv`, `.log` | `scripts/experiments/{exp_trailing_baseline,eval_trailing}.py` |
 | Pinball score (q90 +45.4% 82 of 84; q99 +46.2% 77 of 84) | | `outputs/eval_pinball.csv` | `scripts/experiments/eval_pinball.py` |
 | ENSO and season stratification | | `outputs/eval_enso_{ocrot,deploy}.csv`, `.log` | `scripts/experiments/eval_enso.py` |
 | Lake ablations (706 marine; matched 640) | at most 0.7 points | `outputs/eval_full_lstmq_v2marine.csv`, `v2g640{,marine}.csv` | `scripts/eval_full.py` |
-| Composition ablation of the preprint (298 less-diverse pool) | 8 h +10% vs +18% | `outputs/eval_full_lstmq_v2n298.csv` | same |
+| Composition ablation of the draft (298 less-diverse pool) | 8 h +10% vs +18% | `outputs/eval_full_lstmq_v2n298.csv` | same |
 | Out-of-domain set | 15 evaluated, 14 beat persistence | `outputs/eval_full_lstmq_v2final_xdom.csv` | same |
 | Seismic-mask impact (up to 45% of p99.9 hours) | | `outputs/seismic_exceedance_audit.csv` | pipeline QC |
 
 Notes.
 - The factor study of the manuscript is the clean-protocol comparison (recurrent model, attention model with hour and channel
-  forcing embeddings, Chronos-Bolt; all with validation-fold checkpoint selection on seismic-masked records). The preprint's
+  forcing embeddings, Chronos-Bolt; all with validation-fold checkpoint selection on seismic-masked records). The draft's
   legacy factor rows were retired with the September 2026 revision.
 - The coverage indicator that appeared in a September 2026 draft was withdrawn from the manuscript on 2026-09-10 and its
   artifacts were removed from this repository on 2026-09-14.
