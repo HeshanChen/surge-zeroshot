@@ -1,0 +1,35 @@
+cff-version: 1.2.0
+message: "If you use this repository, please cite the software release and the manuscript it accompanies."
+type: software
+title: "surge-zeroshot: code, frozen splits, evaluation protocol and trained models for \"Storm surge forecasts from a global tide-gauge network\""
+authors:
+  - family-names: Chen
+    given-names: Heshan
+    affiliation: "Columbia Climate School, Columbia University; Department of Civil and Environmental Engineering, Stanford University"
+  - family-names: Kruczkiewicz
+    given-names: Andrew
+    affiliation: "Columbia Climate School, Columbia University"
+version: 1.0.0
+date-released: "2026-09-15"
+license: MIT
+repository-code: "https://github.com/HeshanChen/surge-zeroshot"
+abstract: "Code, pre-registered split files, continuous-window evaluation protocol, per-gauge evaluation tables, training logs, sampled reforecast forcing, figure scripts and trained model checkpoints for a recurrent neural network trained on 760 GESLA-3 tide gauges with open atmospheric forcing that forecasts storm surge 1 to 48 hours ahead at gauges and regions never used in training."
+keywords:
+  - storm surge
+  - tide gauges
+  - coastal flooding
+  - forecasting
+  - deep learning
+  - transfer to ungauged coasts
+  - GESLA-3
+  - early warning
+preferred-citation:
+  type: article
+  title: "Storm surge forecasts from a global tide-gauge network"
+  authors:
+    - family-names: Chen
+      given-names: Heshan
+    - family-names: Kruczkiewicz
+      given-names: Andrew
+  year: 2026
+  notes: "Manuscript submitted in 2026; this entry will be updated with the journal reference on publication."

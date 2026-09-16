@@ -1,0 +1,30 @@
+{
+  "title": "surge-zeroshot: code, frozen splits, evaluation protocol and trained models for \"Storm surge forecasts from a global tide-gauge network\"",
+  "upload_type": "software",
+  "description": "<p>Archived release of the repository that accompanies the manuscript <em>Storm surge forecasts from a global tide-gauge network</em> (Heshan Chen and Andrew Kruczkiewicz, 2026). One recurrent neural network trained on 760 quality-screened tide gauges from the GESLA-3 archive, with open atmospheric forcing from the Open-Meteo historical archive, forecasts storm surge 1 to 48 hours ahead at gauges and whole regions that were never used in training.</p><p>The release holds the dataset recipe, the pre-registered split files (deployment split, four leave-region-out rotations, scaling ladder, composition and intervention experiments), the continuous-window evaluation protocol and its scripts, per-gauge evaluation tables and training logs, the sampled GEFSv12 reforecast forcing at the test gauges, the figure scripts and figures of record, and the trained model checkpoints (deployment model, gauge-free variant, rotation, ladder, composition and matched-update models). Two audit gates (<code>scripts/verify_numbers_cont.py</code>, 168 checks, and <code>scripts/verify_numbers.py</code>, 69 checks) assert every number quoted in the manuscript and in the July 2026 preprint directly from the committed artifacts. <code>NUMBERS.md</code> maps each claim to its artifact and script.</p><p>GESLA-3 and the Open-Meteo archive are open data; no registered product is required anywhere in the forecasting pipeline. Third-party datasets retain their own licences.</p>",
+  "creators": [
+    {
+      "name": "Chen, Heshan",
+      "affiliation": "Columbia Climate School, Columbia University; Department of Civil and Environmental Engineering, Stanford University"
+    },
+    {
+      "name": "Kruczkiewicz, Andrew",
+      "affiliation": "Columbia Climate School, Columbia University"
+    }
+  ],
+  "license": "mit",
+  "access_right": "open",
+  "language": "eng",
+  "version": "1.0.0",
+  "keywords": [
+    "storm surge",
+    "tide gauges",
+    "coastal flooding",
+    "forecasting",
+    "deep learning",
+    "recurrent neural network",
+    "transfer to ungauged coasts",
+    "GESLA-3",
+    "early warning"
+  ]
+}

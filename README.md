@@ -84,3 +84,16 @@ evaluation tables; `extract_eot20_statics.py` and `fit_sigma_hat.py` regenerate 
 ## License
 
 Code and artifacts: MIT. The underlying third-party datasets retain their own licences and terms.
+
+## How to cite
+
+Each GitHub release of this repository is archived on Zenodo, which assigns a DOI; the concept DOI 10.5281/zenodo.XXXXXXX
+resolves to the latest archived version (the placeholder is replaced when the first release is archived).
+
+Software: Chen, H. and Kruczkiewicz, A. (2026). surge-zeroshot: code, frozen splits, evaluation protocol and trained models
+for "Storm surge forecasts from a global tide-gauge network" (v1.0.0). Zenodo. https://doi.org/10.5281/zenodo.XXXXXXX
+
+Manuscript: Chen, H. and Kruczkiewicz, A. (2026). Storm surge forecasts from a global tide-gauge network. Submitted.
+
+`CITATION.cff` carries the same metadata for GitHub's "Cite this repository" button; `.zenodo.json` sets the metadata of the
+Zenodo record.
